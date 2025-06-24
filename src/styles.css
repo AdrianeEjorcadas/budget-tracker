@@ -1,1 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import "tailwindcss";
+
+@theme {
+  /* font family */
+  --font-montserrat: "Montserrat Alternates", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
+  --font-nunito: "Nunito Sans", sans-serif;
+
+  /* light mode */
+  --color-light-bg: #f5f5f5;
+  --color-light-btn: #e2b500;
+
+  /* dark mode */
+  --color-dark-bg: #01030c;
+  --color-dark-btn: #ffcc00;
+}
+
+@import "ngx-toastr/toastr";

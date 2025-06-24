@@ -1,0 +1,146 @@
+<div class="bg-light-bg h-screen">
+  <div class="grid h-full rounded p-4 md:grid-cols-2">
+    <div class="hidden items-center justify-center md:flex">
+      <img
+        ngSrc="assets/images/banner.svg"
+        width="500"
+        height="300"
+        alt="Banner image"
+        priority
+      />
+    </div>
+    <div
+      class="flex flex-col items-center justify-center rounded-xl md:rounded-tl-none md:rounded-tr-xl md:rounded-br-xl md:rounded-bl-none"
+    >
+      <div class="mb-10">
+        <h1
+          class="text-center text-2xl font-bold tracking-wider text-gray-600 uppercase"
+        >
+          register to <span class="text-light-btn block">budget tracker</span>
+        </h1>
+      </div>
+      <div class="w-full p-4 sm:px-12 md:px-15 lg:px-30">
+        <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+          <!--  [formGroup]="loginForm" (ngSubmit)="debugClick()" -->
+          <!-- username -->
+          <div class="mb-2 flex flex-col">
+            <label class="text-sm font-bold text-gray-400 capitalize"
+              >user name</label
+            >
+            <input
+              formControlName="username"
+              type="text"
+              placeholder="Enter your username"
+              class="focus:border-light-btn rounded border border-gray-300 px-3 py-2 text-gray-500 focus:ring-0 focus:outline-none"
+            />
+            <div
+              *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched"
+              class="text-xs text-red-500"
+            >
+              <ng-container
+                *ngIf="registerForm.get('username')?.errors?.['required']"
+                >Username is required</ng-container
+              >
+            </div>
+          </div>
+          <!-- email -->
+          <div class="mb-2 flex flex-col">
+            <label class="text-sm font-bold text-gray-400 capitalize"
+              >email</label
+            >
+            <input
+              formControlName="email"
+              type="email"
+              placeholder="Enter your email"
+              class="focus:border-light-btn rounded border border-gray-300 px-3 py-2 text-gray-500 focus:ring-0 focus:outline-none"
+            />
+            <div
+              *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+              class="text-xs text-red-500"
+            >
+              <ng-container
+                *ngIf="registerForm.get('email')?.errors?.['required']"
+                >Email is required</ng-container
+              >
+              <ng-container *ngIf="registerForm.get('email')?.errors?.['email']"
+                >Please enter a valid email address</ng-container
+              >
+            </div>
+          </div>
+          <!-- password -->
+          <div class="mb-2 flex flex-col">
+            <label class="text-sm font-bold text-gray-400 capitalize"
+              >password</label
+            >
+            <input
+              formControlName="password"
+              type="password"
+              placeholder="Enter your password"
+              class="focus:border-light-btn rounded border border-gray-300 px-3 py-2 text-gray-500 focus:ring-0 focus:outline-none"
+            />
+            <div
+              *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+              class="flex flex-col gap-0.5 text-xs text-red-500"
+            >
+              <div *ngIf="registerForm.get('password')?.errors?.['required']">
+                Password is required
+              </div>
+              <div *ngIf="registerForm.get('password')?.errors?.['minlength']">
+                Password must be at least 8 characters.
+              </div>
+              <div
+                *ngIf="!registerForm.get('password')?.errors?.['required'] && registerForm.get('password')?.errors?.['uppercase']"
+              >
+                Password must contain at least one upper case.
+              </div>
+              <div
+                *ngIf="!registerForm.get('password')?.errors?.['required'] && registerForm.get('password')?.errors?.['specialChar']"
+              >
+                Password must contain at least one special character.
+              </div>
+              <div
+                *ngIf="!registerForm.get('password')?.errors?.['required'] && registerForm.get('password')?.errors?.['number']"
+              >
+                Password must contain at least 1 number.
+              </div>
+            </div>
+          </div>
+
+          <!-- confirm password -->
+          <div class="mb-2 flex flex-col">
+            <label class="text-sm font-bold text-gray-400 capitalize"
+              >confirm password</label
+            >
+            <input
+              formControlName="confirmPassword"
+              type="password"
+              placeholder="Confirm your password"
+              class="focus:border-light-btn rounded border border-gray-300 px-3 py-2 text-gray-500 focus:ring-0 focus:outline-none"
+            />
+            <div
+              *ngIf="registerForm.get('confirmPassword')?.errors?.['required'] && registerForm.get('confirmPassword')?.touched"
+              class="text-xs text-red-500"
+            >
+              Confirmation password is required.
+            </div>
+            <div
+              *ngIf="registerForm.get('confirmPassword')?.touched && !registerForm.get('confirmPassword')?.errors?.['required'] && registerForm.errors?.['passwordMismatch']"
+              class="text-xs text-red-500"
+            >
+              Passwords do not match.
+            </div>
+          </div>
+          <!-- sign up button -->
+          <div>
+            <button
+              type="submit"
+              class="bg-light-btn text-light-bg mt-4 w-full cursor-pointer rounded-lg py-2 text-center text-sm font-bold capitalize transition-all duration-300 hover:bg-amber-600"
+            >
+              register
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

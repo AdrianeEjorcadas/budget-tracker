@@ -1,0 +1,105 @@
+<div class="bg-light-bg h-screen">
+  <div class="grid h-full rounded p-4 md:grid-cols-2">
+    <div class="hidden items-center justify-center md:flex">
+      <img
+        ngSrc="assets/images/banner.svg"
+        width="500"
+        height="300"
+        alt="Banner image"
+        priority
+      />
+    </div>
+    <div
+      class="flex flex-col items-center justify-center rounded-xl md:rounded-tl-none md:rounded-tr-xl md:rounded-br-xl md:rounded-bl-none"
+    >
+      <div class="mb-10">
+        <h1
+          class="text-center text-2xl font-bold tracking-wider text-gray-600 uppercase"
+        >
+          log in to <span class="text-light-btn block">budget tracker</span>
+        </h1>
+      </div>
+      <div class="w-full p-4 sm:px-12 md:px-15 lg:px-30">
+        <form [formGroup]="loginForm" (ngSubmit)="debugClick()">
+          <!-- email -->
+          <div class="mb-2 flex flex-col">
+            <label class="text-sm font-bold text-gray-400 capitalize"
+              >email</label
+            >
+            <input
+              formControlName="email"
+              type="email"
+              placeholder="Enter your email"
+              class="focus:border-light-btn rounded border border-gray-300 px-3 py-2 text-gray-500 focus:ring-0 focus:outline-none"
+            />
+            <div
+              *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+              class="text-xs text-red-500"
+            >
+              <ng-container *ngIf="loginForm.get('email')?.errors?.['required']"
+                >Email is required</ng-container
+              >
+              <ng-container *ngIf="loginForm.get('email')?.errors?.['email']"
+                >Please enter a valid email address</ng-container
+              >
+            </div>
+          </div>
+          <!-- password -->
+          <div class="flex flex-col">
+            <label class="text-sm font-bold text-gray-400 capitalize"
+              >password</label
+            >
+            <input
+              formControlName="password"
+              type="password"
+              placeholder="Enter your password"
+              class="focus:border-light-btn rounded border border-gray-300 px-3 py-2 text-gray-500 focus:ring-0 focus:outline-none"
+            />
+            <div
+              *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+              class="text-xs text-red-500"
+            >
+              <ng-container
+                *ngIf="loginForm.get('password')?.errors?.['required']"
+                >Password is required</ng-container
+              >
+              <ng-container
+                *ngIf="loginForm.get('password')?.errors?.['minlength']"
+                >Password must be at least 8 characters.</ng-container
+              >
+            </div>
+          </div>
+          <!-- forgot password -->
+          <div class="text-end">
+            <a
+              (click)="openForgotPassword()"
+              class="text-light-btn cursor-pointer text-xs hover:text-amber-600"
+              >Forgot Password?</a
+            >
+          </div>
+          <!-- log in button -->
+          <div>
+            <button
+              type="submit"
+              class="bg-light-btn text-light-bg mt-4 w-full cursor-pointer rounded-lg py-2 text-center text-sm font-bold capitalize transition-all duration-300 hover:bg-amber-600"
+              [disabled]="loginForm.invalid"
+            >
+              log in
+            </button>
+          </div>
+        </form>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600">
+          Not registered yet?&nbsp;
+          <a
+            (click)="openRegister()"
+            class="text-light-btn cursor-pointer hover:text-amber-600"
+            title="Sign up for an account"
+            >Create an account</a
+          >
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
