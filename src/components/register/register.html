@@ -65,6 +65,11 @@
               <ng-container *ngIf="registerForm.get('email')?.errors?.['email']"
                 >Please enter a valid email address</ng-container
               >
+              <ng-container
+                *ngIf="registerForm.get('email')?.hasError('emailTaken') && registerForm.get('email')?.touched"
+              >
+                Email address is already taken
+              </ng-container>
             </div>
           </div>
           <!-- password -->

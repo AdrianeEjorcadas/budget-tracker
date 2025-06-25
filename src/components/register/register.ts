@@ -1,8 +1,12 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, inject, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidatorFn, ValidationErrors  } from '@angular/forms';
-import { timeout } from 'rxjs';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidatorFn, ValidationErrors , AsyncValidatorFn } from '@angular/forms';
+import { catchError, debounceTime, filter, map, Observable, of, switchMap, timeout, timer } from 'rxjs';
 import { Toastr } from '../../reusable/toastr/toastr';
+import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { UserApiService } from '../../services/user-api-service';
+import { ReturnResponse } from '../../models/return-response';
 
 
 @Component({
@@ -16,6 +20,8 @@ export class Register implements OnInit {
   registerForm!: FormGroup;
   private fb = inject(FormBuilder);
   private toastr = inject(Toastr);
+  private http = inject(HttpClient);
+  private userService = inject(UserApiService);
 
  private passwordMatchValidator: ValidatorFn = (form: AbstractControl): ValidationErrors | null => {
     const password = form.get('password')?.value;
@@ -36,15 +42,31 @@ export class Register implements OnInit {
     return (control: AbstractControl): ValidationErrors | null =>
       /[!@#$%^&*()_,.?":{}|<>]/.test(control.value) ? null : { specialChar: true };
   }
+
+  private emailExistValidator() : AsyncValidatorFn{
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      if (!control.value || control.invalid) return of(null);
+      return timer(300).pipe(
+        // filter(() => !!control.value && !!this.registerForm.get('email')?.valid),
+        switchMap(() =>
+          this.userService.isEmailExist(control.value).pipe(
+            map(res => res.data ? {emailTaken: true} : null ),
+            catchError(() => of(null))
+          )
+        )
+      );
+    }
+  }
   
   ngOnInit(): void {
     this.createFormRegisterForm();
+    this.isEmailExist();
   }
 
   createFormRegisterForm(){
     this.registerForm = this.fb.group({
       username: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email], [this.emailExistValidator()]],
       password: [
         '',
       [
@@ -59,6 +81,24 @@ export class Register implements OnInit {
     },
     { validators: this.passwordMatchValidator }
   );
+  }
+
+  isEmailExist(){
+    this.registerForm.get('email')?.valueChanges
+    .pipe(
+      debounceTime(300),
+      filter((email: string) => !!email && !!this.registerForm.get('email')?.valid),
+      switchMap(email => this.userService.isEmailExist(email))
+      )
+    .subscribe(result =>{
+      if(result.data){
+        console.log('Email exists!');
+        this.registerForm.get('email')?.setErrors({emailTaken: true})
+      } else {
+        console.log('Email is available');
+        this.registerForm.get('email')?.setErrors({emailTaken: false});
+      }
+    })
   }
 
   protected debugClickres() {
