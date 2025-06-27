@@ -5,20 +5,21 @@ import { ForgotPassword } from '../components/forgot-password/forgot-password';
 
 export const routes: Routes = [
     {
-        path: '',
-        redirectTo: 'login',
-        pathMatch: 'full'
-    },
-    {
         path: 'login',
-        component: Login
+        loadComponent: () => import('../components/login/login').then(m => m.Login)
+        // canActivate: [AuthGuard]
     },
     {
         path: 'register',
-        component: Register
+        loadComponent: () => import('../components/register/register').then(m => m.Register)
     },
     {
         path: 'forgot-password',
-        component: ForgotPassword
+        loadComponent: () => import('../components/forgot-password/forgot-password').then(m => m.ForgotPassword)
+    },
+     {
+        path: '',
+        redirectTo: 'login',
+        pathMatch: 'full'
     }
 ];

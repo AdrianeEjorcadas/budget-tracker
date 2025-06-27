@@ -9,6 +9,7 @@ import { UserApiService } from '../../services/user-api-service';
 import { ReturnResponse } from '../../models/return-response';
 
 
+
 @Component({
   selector: 'app-register',
   imports: [CommonModule, ReactiveFormsModule,NgOptimizedImage],
@@ -23,10 +24,11 @@ export class Register implements OnInit {
   private http = inject(HttpClient);
   private userService = inject(UserApiService);
 
+  //#region Validators
  private passwordMatchValidator: ValidatorFn = (form: AbstractControl): ValidationErrors | null => {
     const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-    return password === confirmPassword ? null : { passwordMismatch: true };
+    const confirmationPassword = form.get('confirmationPassword')?.value;
+    return password === confirmationPassword ? null : { passwordMismatch: true };
   };
   private uppercaseValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null =>
@@ -58,6 +60,8 @@ export class Register implements OnInit {
     }
   }
   
+  //#endregion
+
   ngOnInit(): void {
     this.createFormRegisterForm();
     this.isEmailExist();
@@ -66,7 +70,6 @@ export class Register implements OnInit {
   createFormRegisterForm(){
     this.registerForm = this.fb.group({
       username: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email], [this.emailExistValidator()]],
       password: [
         '',
       [
@@ -77,7 +80,8 @@ export class Register implements OnInit {
         this.specialCharValidator()
       ]
     ], 
-      confirmPassword: ['', [Validators.required]]
+      confirmationPassword: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email], [this.emailExistValidator()]],
     },
     { validators: this.passwordMatchValidator }
   );
@@ -108,9 +112,22 @@ export class Register implements OnInit {
 
   onRegister(){
     console.log(this.registerForm.value);
+    const formData = this.registerForm.value;
     // this.showToast('Successfully Register', 'Budget Tracker');
-    this.toastr.successToast('Successfully Register');
-    this.formReset();
+    this.userService.registerUserPost(this.registerForm.value).subscribe({
+      next: (res) =>{
+        if(res.statusCode === 201){
+          this.toastr.successToast('Successfully Registered')
+          this.formReset();
+        } else {
+          this.toastr.errorToast(res.message || 'Registration Failed')
+        }
+      },
+      error: (err) => {      
+        console.error('Error during registration:', err);
+        this.toastr.errorToast('Something went wrong. Please try again.');
+      }
+    })
   }
 
   formReset(){

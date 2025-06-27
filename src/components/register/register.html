@@ -31,7 +31,7 @@
               formControlName="username"
               type="text"
               placeholder="Enter your username"
-              class="focus:border-light-btn rounded border border-gray-300 px-3 py-2 text-gray-500 focus:ring-0 focus:outline-none"
+              class="focus:border-light-btn rounded border border-gray-300 px-3 py-2 text-gray-500 capitalize focus:ring-0 focus:outline-none"
             />
             <div
               *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched"
@@ -117,19 +117,19 @@
               >confirm password</label
             >
             <input
-              formControlName="confirmPassword"
+              formControlName="confirmationPassword"
               type="password"
               placeholder="Confirm your password"
               class="focus:border-light-btn rounded border border-gray-300 px-3 py-2 text-gray-500 focus:ring-0 focus:outline-none"
             />
             <div
-              *ngIf="registerForm.get('confirmPassword')?.errors?.['required'] && registerForm.get('confirmPassword')?.touched"
+              *ngIf="registerForm.get('confirmationPassword')?.errors?.['required'] && registerForm.get('confirmationPassword')?.touched"
               class="text-xs text-red-500"
             >
               Confirmation password is required.
             </div>
             <div
-              *ngIf="registerForm.get('confirmPassword')?.touched && !registerForm.get('confirmPassword')?.errors?.['required'] && registerForm.errors?.['passwordMismatch']"
+              *ngIf="registerForm.get('confirmationPassword')?.touched && !registerForm.get('confirmationPassword')?.errors?.['required'] && registerForm.errors?.['passwordMismatch']"
               class="text-xs text-red-500"
             >
               Passwords do not match.
@@ -138,6 +138,7 @@
           <!-- sign up button -->
           <div>
             <button
+              [disabled]="registerForm.invalid"
               type="submit"
               class="bg-light-btn text-light-bg mt-4 w-full cursor-pointer rounded-lg py-2 text-center text-sm font-bold capitalize transition-all duration-300 hover:bg-amber-600"
             >

@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { ReturnResponse } from '../models/return-response';
 import { catchError, Observable, of } from 'rxjs';
 import { environment } from '../environments/environment';
+import { RegisterUserInteface } from '../models/interface/RegisterUserInteface';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,21 @@ export class UserApiService {
         data: false
       } satisfies ReturnResponse<boolean>)
     }));
+  }
+
+  registerUserPost(user: RegisterUserInteface) : Observable<ReturnResponse<null>>{
+    console.log('service : '+user.email);
+    return this.http.post<ReturnResponse<null>>(`${environment.apiUrl}/${environment.userEndPoint}/create-user`,user)
+    .pipe(
+      catchError((error : any) => {
+      console.log("Registration failed," + error);
+        return of({
+        statusCode: 500,
+        message: "Server Error",
+        data: null
+        } satisfies ReturnResponse<null> ) 
+      })
+    )
   }
 
 }
