@@ -4,6 +4,7 @@ import { ReturnResponse } from '../models/return-response';
 import { catchError, Observable, of } from 'rxjs';
 import { environment } from '../environments/environment';
 import { RegisterUserInteface } from '../models/interface/RegisterUserInteface';
+import { ForgotPasswordInterface } from '../models/interface/ForgotPasswordInterface';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,20 @@ export class UserApiService {
         message: "Server Error",
         data: null
         } satisfies ReturnResponse<null> ) 
+      })
+    )
+  }
+
+  forgotPasswordPost(email: ForgotPasswordInterface) : Observable<ReturnResponse<null>> {
+    return this.http.post<ReturnResponse<null>>(`${environment.apiUrl}/${environment.userEndPoint}/forgot-password`, email)
+    .pipe(
+      catchError((error: any) => {
+        console.log('Registration failed' + error);
+          return of({
+            statusCode : 500,
+            message: "Server Error",
+            data: null
+          } satisfies ReturnResponse<null>)
       })
     )
   }

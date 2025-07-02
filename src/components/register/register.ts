@@ -114,7 +114,7 @@ export class Register implements OnInit {
     console.log(this.registerForm.value);
     const formData = this.registerForm.value;
     // this.showToast('Successfully Register', 'Budget Tracker');
-    this.userService.registerUserPost(this.registerForm.value).subscribe({
+    this.userService.registerUserPost(formData).subscribe({
       next: (res) =>{
         if(res.statusCode === 201){
           this.toastr.successToast('Successfully Registered')
