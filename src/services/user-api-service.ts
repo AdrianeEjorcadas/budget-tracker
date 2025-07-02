@@ -5,6 +5,8 @@ import { catchError, Observable, of } from 'rxjs';
 import { environment } from '../environments/environment';
 import { RegisterUserInteface } from '../models/interface/RegisterUserInteface';
 import { ForgotPasswordInterface } from '../models/interface/ForgotPasswordInterface';
+import { LoginInterface } from '../models/interface/LoginInterface';
+import { AuthenticationTokenDetails } from '../models/interface/AuthenticationTokenDetails';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +53,20 @@ export class UserApiService {
             message: "Server Error",
             data: null
           } satisfies ReturnResponse<null>)
+      })
+    )
+  }
+
+  loginUserPost(user: LoginInterface): Observable<ReturnResponse<{token: AuthenticationTokenDetails} | null>>{ 
+    return this.http.put<ReturnResponse<{token: AuthenticationTokenDetails} | null>>(`${environment.apiUrl}/${environment.userEndPoint}/login`, user)
+    .pipe(
+      catchError((error: any) => {
+        console.error('Login failed:', error?.error || error?.message || error);
+          return of({
+            statusCode: 500,
+            message: "Server Error",
+            data: null
+          } satisfies ReturnResponse<{token: AuthenticationTokenDetails} | null>)
       })
     )
   }

@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { LoginInterface } from '../../models/interface/LoginInterface';
 import { ReturnResponse } from '../../models/return-response';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { UserApiService } from '../../services/user-api-service';
+import { Toastr } from '../../reusable/toastr/toastr';
 
 @Component({
   selector: 'app-login',
@@ -14,19 +16,53 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 })
 export class Login {
   loginForm: FormGroup;
+  private userService = inject(UserApiService);
+  private toastr = inject(Toastr);
 
   constructor(
     private fb: FormBuilder,
     private router:Router
   ){
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      EmailAddress: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]]
     })
   }
 
-  public onLogin(){
-    console.log(this.loginForm.valid, this.loginForm.value, this.loginForm.errors);
+  onLogin(){
+    if(this.loginForm.invalid) return;
+    const userCreds = this.loginForm.value;
+
+    this.userService.loginUserPost(userCreds).subscribe({
+      next: (res) => {
+        if(res.statusCode === 200){
+          const authToken = res.data?.token?.authToken;
+          this.storeAccess(authToken!);
+          console.log(res);
+          this.toastr.successToast("Successfully Login");
+          this.loginForm.reset();
+          // reroute to homepage
+          // this.router.navigate(['/home'], {replaceUrl: true});
+          this.openHome();
+        } else {
+            this.toastr.errorToast(res.message || 'Login Failed');
+          }
+        },
+      error: (error : any) =>{
+        console.error('Error during login:', error?.error || error?.message || error);
+        this.toastr.errorToast('Something went wrong. Please try again.');
+      }
+    })
+  }
+
+  storeAccess(authToken: string): void{
+    sessionStorage.setItem('authToken', authToken)
+  }
+
+  openHome():void{
+      setTimeout(() => {
+        this.router.navigate(['/home'], { replaceUrl: true });
+      }, 0);
   }
 
   openRegister(): void{

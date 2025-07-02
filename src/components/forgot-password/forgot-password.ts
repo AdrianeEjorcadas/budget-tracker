@@ -52,7 +52,7 @@ export class ForgotPassword implements OnInit {
     this.userService.forgotPasswordPost(email).subscribe({
       next: (res) => {
         if(res.statusCode === 200){
-          this.toastr.successToast(`Sent email confirmation to ${email}`);
+          this.toastr.successToast(`Sent email confirmation to ${email.EmailAddress}`);
           this.forgotPasswordForm.reset();
           this.rerouteToLogin();
         } else {

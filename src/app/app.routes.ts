@@ -21,5 +21,10 @@ export const routes: Routes = [
         path: '',
         redirectTo: 'login',
         pathMatch: 'full'
+    },
+    {
+        path: 'home',
+        title: 'Budget Tracker - Home',
+        loadComponent: () => import('../components/budget-tracker-components/home/home').then(m => m.Home)
     }
 ];
