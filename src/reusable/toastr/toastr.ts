@@ -10,36 +10,36 @@ export class Toastr {
   
   constructor() { }
 
-  successToast(message: string){
+  successToast(message: string, timeDuration: number = 1500){
     this.toast.success(`${message}!`, 'Budget Tracker', {
-      timeOut: 1500,
+      timeOut: timeDuration,
       progressBar: true,
       progressAnimation: 'increasing',
       easeTime: 300
     })
   }
 
-  infoToast(message: string){
+  infoToast(message: string, timeDuration: number = 1500){
     this.toast.info(`${message}!`, 'Budget Tracker', {
-      timeOut: 1500,
+      timeOut: timeDuration,
       progressBar: true,
       progressAnimation: 'increasing',
       easeTime: 300
     })
   }
 
-  warningToast(message: string){
+  warningToast(message: string, timeDuration: number = 1500){
     this.toast.warning(`${message}!`, 'Budget Tracker', {
-      timeOut: 1500,
+      timeOut: timeDuration,
       progressBar: true,
       progressAnimation: 'increasing',
       easeTime: 300
     })
   }
 
-   errorToast(message: string){
+   errorToast(message: string, timeDuration: number = 1500){
     this.toast.error(`${message}!`, 'Budget Tracker', {
-      timeOut: 1500,
+      timeOut: timeDuration,
       progressBar: true,
       progressAnimation: 'increasing',
       easeTime: 300

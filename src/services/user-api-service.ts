@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ReturnResponse } from '../models/return-response';
 import { catchError, Observable, of } from 'rxjs';
@@ -64,9 +64,24 @@ export class UserApiService {
         console.error('Login failed:', error?.error || error?.message || error);
           return of({
             statusCode: 500,
-            message: "Server Error",
+            message: "Login Failed",
             data: null
           } satisfies ReturnResponse<{token: AuthenticationTokenDetails} | null>)
+      })
+    )
+  }
+
+  confirmEmailPut(token: string): Observable<ReturnResponse<null>> {
+    const params = new HttpParams().set('ConfirmationToken',token);
+    return this.http.put<ReturnResponse<null>>(`${environment.apiUrl}/${environment.userEndPoint}/confirm-email`, null, {params})
+    .pipe(
+      catchError((error:any) => {
+        console.error('Login failed:', error?.error || error?.message || error);
+          return of({
+            statusCode: 500,
+            message: "Confirmation Email Failed",
+            data: null
+          } satisfies ReturnResponse<null>)
       })
     )
   }
