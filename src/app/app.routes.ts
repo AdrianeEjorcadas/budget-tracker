@@ -31,7 +31,12 @@ export const routes: Routes = [
         title: 'Budget Tracker - Email Confirmation',
         loadComponent: () => import('../components/confirm-email/confirm-email').then(m => m.ConfirmEmail)
     },
-     {
+    {
+        path: 'reset-password',
+        title: 'Budget Tracker - Reset Password',
+        loadComponent: () => import('../components/reset-password/reset-password').then(m => m.ResetPassword)
+    },
+    {
         path: '',
         redirectTo: 'login',
         pathMatch: 'full'

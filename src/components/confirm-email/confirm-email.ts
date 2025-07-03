@@ -21,7 +21,7 @@ export class ConfirmEmail implements OnInit {
     const token  = this.activateRoute.snapshot.queryParamMap.get('token');
     // this.toastr.infoToast('Confirming your email address', 2000);
     this.confirmEmailPut(token);
-    // this.redirectToLogin();
+    this.redirectToLogin();
     console.log(token);
   }
 

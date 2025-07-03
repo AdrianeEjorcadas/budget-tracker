@@ -7,6 +7,7 @@ import { RegisterUserInteface } from '../models/interface/RegisterUserInteface';
 import { ForgotPasswordInterface } from '../models/interface/ForgotPasswordInterface';
 import { LoginInterface } from '../models/interface/LoginInterface';
 import { AuthenticationTokenDetails } from '../models/interface/AuthenticationTokenDetails';
+import { ResetPasswordInterface } from '../models/interface/ResetPasswordInterface';
 
 @Injectable({
   providedIn: 'root'
@@ -76,6 +77,21 @@ export class UserApiService {
     return this.http.put<ReturnResponse<null>>(`${environment.apiUrl}/${environment.userEndPoint}/confirm-email`, null, {params})
     .pipe(
       catchError((error:any) => {
+        console.error('Login failed:', error?.error || error?.message || error);
+          return of({
+            statusCode: 500,
+            message: "Confirmation Email Failed",
+            data: null
+          } satisfies ReturnResponse<null>)
+      })
+    )
+  }
+
+  resetPasswordPut(token:string, reset: ResetPasswordInterface) : Observable<ReturnResponse<null>> {
+    const params = new HttpParams().set('token', token);
+    return this.http.put<ReturnResponse<null>>(`${environment.apiUrl}/${environment.userEndPoint}/reset-password`, reset, {params})
+    .pipe(
+      catchError((error: any) => {
         console.error('Login failed:', error?.error || error?.message || error);
           return of({
             statusCode: 500,
