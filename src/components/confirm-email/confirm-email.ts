@@ -1,4 +1,4 @@
-import { NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage, Location } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Toastr } from '../../reusable/toastr/toastr';
@@ -16,10 +16,16 @@ export class ConfirmEmail implements OnInit {
   router = inject(Router);
   toastr = inject(Toastr);
   userService = inject(UserApiService);
+  location = inject(Location);
 
   ngOnInit(): void {
-    const token  = this.activateRoute.snapshot.queryParamMap.get('token');
+    // const token = this.activateRoute.snapshot.queryParamMap.get('token') || '';
     // this.toastr.infoToast('Confirming your email address', 2000);
+    const rawQuery = this.location.path(true);
+    const tokenMatch = rawQuery.match(/[?&]token=([^&]+)/);
+    const rawToken = tokenMatch ? tokenMatch[1].replace(/%20/g, '%2B') : '';
+    const token = decodeURIComponent(rawToken);
+
     this.confirmEmailPut(token);
     this.redirectToLogin();
     console.log(token);

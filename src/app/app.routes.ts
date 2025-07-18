@@ -37,6 +37,11 @@ export const routes: Routes = [
         loadComponent: () => import('../components/reset-password/reset-password').then(m => m.ResetPassword)
     },
     {
+        path: 'connection-timeout',
+        title: 'Budget Tracker - Connection Timeout',
+        loadComponent: () => import('../components/connection-timeout/connection-timeout').then(m => m.ConnectionTimeout)
+    },
+    {
         path: '',
         redirectTo: 'login',
         pathMatch: 'full'

@@ -78,6 +78,8 @@ export class ResetPassword implements OnInit{
           this.toastr.successToast(res.message);
           this.clearForm();
           this.redirectToLogin();
+        } else if(res.statusCode === 401) {
+          this.toastr.errorToast('Unauthorized access. Please try again.');
         } else {
           this.toastr.errorToast(res.message || 'Password Reset Failed');
         }

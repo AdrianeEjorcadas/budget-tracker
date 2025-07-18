@@ -87,7 +87,7 @@ export class UserApiService {
     )
   }
 
-  resetPasswordPut(token:string, reset: ResetPasswordInterface) : Observable<ReturnResponse<null>> {
+  resetPasswordPut(token: string, reset: ResetPasswordInterface) : Observable<ReturnResponse<null>> {
     const params = new HttpParams().set('token', token);
     return this.http.put<ReturnResponse<null>>(`${environment.apiUrl}/${environment.userEndPoint}/reset-password`, reset, {params})
     .pipe(

@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { UserApiService } from '../../services/user-api-service';
 import { ReturnResponse } from '../../models/return-response';
+import { Router } from '@angular/router';
 
 
 
@@ -23,6 +24,7 @@ export class Register implements OnInit {
   private toastr = inject(Toastr);
   private http = inject(HttpClient);
   private userService = inject(UserApiService);
+  private router = inject(Router);
 
   //#region Validators
  private passwordMatchValidator: ValidatorFn = (form: AbstractControl): ValidationErrors | null => {
@@ -117,8 +119,9 @@ export class Register implements OnInit {
     this.userService.registerUserPost(formData).subscribe({
       next: (res) =>{
         if(res.statusCode === 201){
-          this.toastr.successToast('Successfully Registered')
+          this.toastr.successToast('Successfully Registered');
           this.formReset();
+          this.redirectToLogin();
         } else {
           this.toastr.errorToast(res.message || 'Registration Failed')
         }
@@ -134,6 +137,11 @@ export class Register implements OnInit {
     this.registerForm.reset();
   }
 
+  redirectToLogin(){
+    setTimeout(() => {
+      this.router.navigate(['/login']);
+    }, 2000);
+  }
   // showToast(message: string, title: string) {
   //   this.toast.success(`${message}`, title, {timeOut: 2000, progressBar: true, progressAnimation:'increasing' , easeTime: 300} );
   // }
