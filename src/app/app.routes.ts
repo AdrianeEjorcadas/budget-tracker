@@ -6,6 +6,11 @@ import { ConfirmEmail } from '../components/confirm-email/confirm-email';
 
 export const routes: Routes = [
     {
+        path: 'budget-tracker',
+        title: 'Budget Tracker',
+        loadComponent: () => import('../components/landing-page/landing-page/landing-page').then(m => m.LandingPage)
+    },
+    {
         path: 'login',
         title: 'Budget Tracker - Login',
         loadComponent: () => import('../components/login/login').then(m => m.Login)
@@ -43,7 +48,7 @@ export const routes: Routes = [
     },
     {
         path: '',
-        redirectTo: 'login',
+        redirectTo: 'budget-tracker',
         pathMatch: 'full'
     }
 ];

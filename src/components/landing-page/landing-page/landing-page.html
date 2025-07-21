@@ -1,0 +1,35 @@
+
+<div class="bg-light-bg h-screen">
+    <div class="flex flex-col p-4 ">
+        <!-- header -->
+        <div class="flex justify-between items-center sm:px-20 xl:px-65">
+            <!-- header logo -->
+            <h2 class="text-2xl font-bold text-light-btn capitalize">budget tracker</h2>
+            <!-- header button -->
+            <div>
+                <a title="Login to Budget Tracker" class="py-2 px-4 bg-light-btn rounded-xl text-white font-bold cursor-pointer hover:bg-dark-btn transition-all duration-300" (click)="openLogIn()"> Login</a>
+            </div>
+        </div>
+        <!-- content -->
+         <div class="flex gap-10 mt-30 sm:px-20 md:px-20 md:gap-25 lg:gap-50 xl:px-65 xl:mt-40">
+            <!-- hero content -->
+            <div class="flex flex-col space-y-10 lg:w-200">
+                <h1 class="text-4xl font-semibold">Take Control of Your Finances</h1>
+                <p>Master your money with a streamlined dashboard that simplifies budgeting, spending tracking, and savings growth. Stay focused on your financial goals with smart tools that make managing your money feel effortless</p>
+                <div class=" flex justify-end md:justify-start">
+                    <a (click)="openRegister()" title="Get Started" class="capitalize py-2 px-4 bg-light-btn max-w-max rounded-xl text-white font-bold cursor-pointer hover:bg-dark-btn transition-all duration-300">get started</a>
+                </div>
+            </div>
+            <!-- hero illustration -->
+             <div class="hidden md:flex">
+                <img
+                    ngSrc="assets/images/banner.svg"
+                    width="700"
+                    height="350"
+                    alt="Banner image"
+                    priority
+                />
+             </div>
+        </div>
+    </div>
+</div>
