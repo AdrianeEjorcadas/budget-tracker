@@ -48,7 +48,8 @@ export const routes: Routes = [
     },
     {
         path: '',
-        redirectTo: 'budget-tracker',
+        // redirectTo: 'budget-tracker',
+        redirectTo: 'home',
         pathMatch: 'full'
     }
 ];

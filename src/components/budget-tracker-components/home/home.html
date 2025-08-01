@@ -1,1 +1,52 @@
-<p>home works!</p>
+<div class="bg-light-bg h-screen">
+    <nav class="flex justify-center py-5 ">
+        <div class="w-screen py-5 ">
+            <!-- ICONS -->
+            <ul class="transition-all duration-500 ease-in-out
+                        flex justify-evenly
+                        sm:h-0 sm:opacity-0 sm:invisible sm:pointer-events-none
+                        opacity-100 visible">
+                <li>
+                    <a href="#" title="Dashboard">
+                        <i class="fa-solid fa-chart-line text-2xl hover:text-light-btn duration-300 transition-all"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" title="Transaction">
+                        <i class="fa-solid fa-money-bill-transfer text-2xl hover:text-light-btn duration-300 transition-all"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" title="About">
+                        <i class="fa-solid fa-info text-2xl hover:text-light-btn duration-300 transition-all"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- FOR LARGER DEVICES -->
+            <ul class="transition-all duration-500 ease-in-out
+                        flex justify-evenly
+                        sm:opacity-100 sm:visible h-0 
+                        opacity-0 invisible">
+                <li> 
+                    <a href="#" >
+                        <span class="text-2xl p-0 font-semibold hover:text-light-btn transition-all duration-300">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" >
+                        <span class="text-2xl p-0 font-semibold hover:text-light-btn transition-all duration-300">Transaction</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" >
+                        <span class="text-2xl p-0 font-semibold hover:text-light-btn transition-all duration-300">About</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div>
+        <router-outlet></router-outlet>
+    </div>
+</div>
