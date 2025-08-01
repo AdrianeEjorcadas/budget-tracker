@@ -29,7 +29,24 @@ export const routes: Routes = [
     {
         path: 'home',
         title: 'Budget Tracker - Home',
-        loadComponent: () => import('../components/budget-tracker-components/home/home').then(m => m.Home)
+        loadComponent: () => import('../components/budget-tracker-components/home/home').then(m => m.Home),
+        children: [
+            {
+                path:'transaction',
+                title: 'Budget Tracker - Transaction',
+                loadComponent: () => import('../components/budget-tracker-components/transaction/transaction').then(m => m.Transaction)
+            },
+            {
+                path: 'dashboard',
+                title: 'Budget Tracker - Dashboard',
+                loadComponent: () => import('../components/budget-tracker-components/dashboard/dashboard').then(m => m.Dashboard)
+            },
+            {
+                path: 'about',
+                title: 'Budget Tracker - About',
+                loadComponent: () => import('../components/budget-tracker-components/about/about').then(m => m.About)
+            }
+        ]
     },
     {
         path: 'confirm-email',
