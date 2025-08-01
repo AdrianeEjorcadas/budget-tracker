@@ -1,17 +1,18 @@
 <div class="bg-light-bg h-screen">
-    <nav class="flex justify-center py-5 ">
-        <div class="w-screen py-5 ">
-            <!-- ICONS -->
-            <ul class="transition-all duration-500 ease-in-out
-                        flex justify-evenly
-                        sm:h-0 sm:opacity-0 sm:invisible sm:pointer-events-none
-                        opacity-100 visible">
+    <nav class="relative py-3">
+        <div class="w-screen py-5">
+            <!-- MOBILE DEVICES -->
+            <ul class="absolute inset-0
+              transition-all duration-500 ease-in-out
+              flex justify-evenly items-center
+              opacity-100 visible pointer-events-auto transform scale-100
+              sm:opacity-0 sm:invisible sm:pointer-events-none sm:scale-95">
                 <li>
                     <a [routerLink]="['/home/dashboard']"
                         routerLinkActive="text-light-btn"
                         [routerLinkActiveOptions]="{exact: true}" 
                         title="Dashboard">
-                            <i class="fa-solid fa-chart-line text-2xl hover:text-light-btn duration-300 transition-all"></i>
+                            <i class="fa-solid fa-chart-line text-2xl hover:text-light-btn duration-300 transition-all p-2"></i>
                     </a>
                 </li>
                 <li>
@@ -19,7 +20,7 @@
                         routerLinkActive="text-light-btn" 
                         [routerLinkActiveOptions]="{exact: true}" 
                         title="Transaction">
-                            <i class="fa-solid fa-money-bill-transfer text-2xl hover:text-light-btn duration-300 transition-all"></i>
+                            <i class="fa-solid fa-money-bill-transfer text-2xl hover:text-light-btn duration-300 transition-all p-2"></i>
                     </a>
                 </li>
                 <li>
@@ -27,16 +28,17 @@
                         routerLinkActive="text-light-btn"
                         [routerLinkActiveOptions]="{exact: true}"
                         title="About">
-                            <i class="fa-solid fa-info text-2xl hover:text-light-btn duration-300 transition-all"></i>
+                            <i class="fa-solid fa-info text-2xl hover:text-light-btn duration-300 transition-all p-2"></i>
                     </a>
                 </li>
             </ul>
 
             <!-- FOR LARGER DEVICES -->
-            <ul class="transition-all duration-500 ease-in-out
-                        flex justify-evenly
-                        sm:opacity-100 sm:visible h-0 
-                        opacity-0 invisible">
+            <ul class="absolute inset-0 
+              transition-all duration-500 ease-in-out
+              flex justify-evenly items-center
+              opacity-0 invisible pointer-events-none transform scale-95
+              sm:opacity-100 sm:visible sm:pointer-events-auto sm:scale-100">
                 <li> 
                     <a [routerLink]="['/home/dashboard']" 
                         routerLinkActive="text-light-btn" 
