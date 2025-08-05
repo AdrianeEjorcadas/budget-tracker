@@ -45,6 +45,11 @@ export const routes: Routes = [
                 path: 'about',
                 title: 'Budget Tracker - About',
                 loadComponent: () => import('../components/budget-tracker-components/about/about').then(m => m.About)
+            },
+            {
+                path: '',
+                redirectTo: 'dashboard',
+                pathMatch: 'full'
             }
         ]
     },
