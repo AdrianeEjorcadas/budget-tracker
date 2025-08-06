@@ -12,11 +12,21 @@ import { MODAL_DATA } from './modal-data.token';
 export class ModalHost {
   readonly modalComponent = inject(ModalService).getComponent;
   readonly modalData = inject(ModalService).getData;
+  readonly parentInjector = inject(Injector);
 
-  readonly modalInjector = Injector.create({
-    providers:[
-      { provide: MODAL_DATA, useValue: this.modalData()}
-    ],
-    parent: inject(Injector)
-  });
+  // readonly modalInjector = Injector.create({
+  //   providers:[
+  //     { provide: MODAL_DATA, useValue: this.modalData()}
+  //   ],
+  //   parent: inject(Injector)
+  // });
+
+  get modalInjector() {
+    return Injector.create({
+      providers: [
+        { provide: MODAL_DATA, useValue: this.modalData() }
+      ],
+      parent: this.parentInjector
+    });
+  }
 }
