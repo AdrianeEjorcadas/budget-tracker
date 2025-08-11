@@ -18,7 +18,6 @@ export class Login {
   loginForm: FormGroup;
   private userService = inject(UserApiService);
   private toastr = inject(Toastr);
-
   constructor(
     private fb: FormBuilder,
     private router:Router
@@ -28,7 +27,6 @@ export class Login {
       password: ['', [Validators.required, Validators.minLength(8)]]
     })
   }
-
   onLogin(){
     if(this.loginForm.invalid) return;
     const userCreds = this.loginForm.value;
@@ -37,7 +35,11 @@ export class Login {
       next: (res) => {
         if(res.statusCode === 200){
           const authToken = res.data?.token?.authToken;
-          this.storeAccess(authToken!);
+          const refreshToken = res.data?.token.refreshToken;
+          const authTokenExpiration = res.data?.token.authTokenExpiration;
+          const refreshTokenExpiration = res.data?.token.refreshTokenExpiration;
+
+          this.storeAccess(authToken!, refreshToken!, authTokenExpiration!, refreshTokenExpiration!);
           console.log(res);
           this.toastr.successToast("Successfully Login");
           this.loginForm.reset();
@@ -45,7 +47,7 @@ export class Login {
           // this.router.navigate(['/home'], {replaceUrl: true});
           this.openHome();
         } else {
-            this.toastr.errorToast(res.message || 'Login Failed');
+            this.toastr.errorToast(res.message || 'Incorrect username or password');
           }
         },
       error: (error : any) =>{
@@ -55,8 +57,11 @@ export class Login {
     })
   }
 
-  storeAccess(authToken: string): void{
-    sessionStorage.setItem('authToken', authToken)
+  storeAccess(authToken: string, refreshToken: string, authExp: string, refreshExp: string): void{
+    sessionStorage.setItem('authToken', authToken);
+    sessionStorage.setItem('refreshToken', refreshToken);
+    sessionStorage.setItem('authTokenExpiration', authExp);
+    sessionStorage.setItem('refreshTokenExpiration', refreshExp);
   }
 
   openHome():void{

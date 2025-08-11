@@ -1,4 +1,4 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule, NgOptimizedImage, Location } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
@@ -20,6 +20,7 @@ export class ResetPassword implements OnInit{
   private toastr = inject(Toastr);
   private userService = inject(UserApiService);
   private router = inject(Router);
+  private location = inject(Location);
   token : string | null = null;
 
   private passwordMatchValidator: ValidatorFn = (form: AbstractControl): ValidationErrors | null => {
@@ -44,7 +45,10 @@ export class ResetPassword implements OnInit{
   }
 
   ngOnInit(): void {
-    this.token = this.activeRoute.snapshot.queryParamMap.get('token');
+    const rawQuery = this.location.path(true);
+    const tokenMatch = rawQuery.match(/[?&]token=([^&]+)/);
+    const rawToken = tokenMatch ? tokenMatch[1].replace(/%20/g, '%2B') : '';
+    this.token =  decodeURIComponent(rawToken);
     this.createResetForm();
   }
 

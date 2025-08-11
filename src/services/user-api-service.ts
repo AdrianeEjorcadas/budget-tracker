@@ -8,6 +8,7 @@ import { ForgotPasswordInterface } from '../models/interface/ForgotPasswordInter
 import { LoginInterface } from '../models/interface/LoginInterface';
 import { AuthenticationTokenDetails } from '../models/interface/AuthenticationTokenDetails';
 import { ResetPasswordInterface } from '../models/interface/ResetPasswordInterface';
+import { UserIdInterface } from '../models/interface/UserIdInterface';
 
 @Injectable({
   providedIn: 'root'
@@ -98,6 +99,20 @@ export class UserApiService {
             message: "Confirmation Email Failed",
             data: null
           } satisfies ReturnResponse<null>)
+      })
+    )
+  }
+
+  getUserDetailsPost(tokenDetails: AuthenticationTokenDetails) : Observable<ReturnResponse<{userDetails : UserIdInterface} | null>>{
+    return this.http.post<ReturnResponse<{userDetails : UserIdInterface}>>(`${environment.apiUrl}/${environment.userEndPoint}/get-user-details`, tokenDetails)
+    .pipe(
+      catchError((error:any) => {
+        console.error('Fetching data failed:', error || error?.message || error);
+          return of({
+            statusCode: 500,
+            message: "Fetching data failed",
+            data: null
+          } satisfies ReturnResponse<{userDetails : UserIdInterface} | null>)
       })
     )
   }

@@ -1,0 +1,32 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { ReturnResponse } from '../models/return-response';
+import { environment } from '../environments/environment';
+import { catchError, Observable, of } from 'rxjs';
+import { UserIdInterface } from '../models/interface/UserIdInterface';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TransactionApiService {
+
+  private http = inject(HttpClient);
+  constructor() { }
+
+  retrieveTransactionGet$(user: UserIdInterface):Observable<ReturnResponse<boolean>>{
+    return this.http.get<ReturnResponse<boolean>>(`${environment.transactionApuIrl}/${environment.transactionEndPoint}/get-transcations?userId=${encodeURIComponent(user.userId)}`)
+    .pipe(
+      catchError(error => {
+        console.error("Retrieving data failed", + error);
+        return of({
+          statusCode: 500,
+          message: "Server error",
+          data: false
+        } satisfies ReturnResponse<boolean> )
+      })
+    );
+  }
+
+
+
+}

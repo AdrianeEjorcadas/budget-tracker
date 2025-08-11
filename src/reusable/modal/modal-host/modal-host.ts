@@ -14,13 +14,6 @@ export class ModalHost {
   readonly modalData = inject(ModalService).getData;
   readonly parentInjector = inject(Injector);
 
-  // readonly modalInjector = Injector.create({
-  //   providers:[
-  //     { provide: MODAL_DATA, useValue: this.modalData()}
-  //   ],
-  //   parent: inject(Injector)
-  // });
-
   get modalInjector() {
     return Injector.create({
       providers: [
