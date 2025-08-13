@@ -103,8 +103,8 @@ export class UserApiService {
     )
   }
 
-  getUserDetailsPost(tokenDetails: AuthenticationTokenDetails) : Observable<ReturnResponse<{userDetails : UserIdInterface} | null>>{
-    return this.http.post<ReturnResponse<{userDetails : UserIdInterface}>>(`${environment.apiUrl}/${environment.userEndPoint}/get-user-details`, tokenDetails)
+  getUserDetailsPost(tokenDetails: AuthenticationTokenDetails) : Observable<ReturnResponse<UserIdInterface | null>>{
+    return this.http.post<ReturnResponse<UserIdInterface | null>>(`${environment.apiUrl}/${environment.userEndPoint}/get-user-details`, tokenDetails)
     .pipe(
       catchError((error:any) => {
         console.error('Fetching data failed:', error || error?.message || error);
@@ -112,7 +112,7 @@ export class UserApiService {
             statusCode: 500,
             message: "Fetching data failed",
             data: null
-          } satisfies ReturnResponse<{userDetails : UserIdInterface} | null>)
+          } satisfies ReturnResponse<UserIdInterface | null>)
       })
     )
   }
