@@ -24,7 +24,17 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-                @if (transactions?.length !== 0) {
+                @if (isLoading) {
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-start text-sm text-gray-500">
+                            <div class="flex justify-center items-center space-x-2">
+                                <span class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-gray-500"></span>
+                                <span class="text-sm text-gray-500">Loading transactions...</span>
+                            </div>
+                        </td>
+                    </tr>  
+                }
+                @else if (transactions?.length !== 0) {
                     @for (item of transactions; track $index) {
                         <tr class="hover:bg-amber-100">
                             

@@ -35,6 +35,7 @@ export class Transaction implements OnInit {
     email: ''
   };
 
+  protected isLoading : boolean = true;
   protected transactions: TransactionInterface[] | null = null;
 
   ngOnInit(): void {
@@ -65,21 +66,25 @@ export class Transaction implements OnInit {
   }
 
   loadTransactions(){
-    this.transactionService.retrieveTransactionGet$(this.userDetails).subscribe({
-      next: (res) => {
-        if(res.statusCode === 200){
-          console.log(res);
-          this.prepareUserTransactions(res)
-          console.log(this.transactions);
-        } else if (res.statusCode === 404){
-          console.log(res.message);
+    this.isLoading = true;
+    setTimeout(() => {
+      this.transactionService.retrieveTransactionGet$(this.userDetails).subscribe({
+        next: (res) => {
+          if(res.statusCode === 200){
+            console.log(res);
+            this.prepareUserTransactions(res)
+            this.isLoading = false;
+            console.log(this.transactions);
+          } else if (res.statusCode === 404){
+            console.log(res.message);
+          }
+        },
+        error: (err) => {
+          console.error('Error during retrieving user data', err);
+          this.toastr.errorToast('Something went wrong. Please contact admin');
         }
-      },
-      error: (err) => {
-        console.error('Error during retrieving user data', err);
-        this.toastr.errorToast('Something went wrong. Please contact admin');
-      }
-    })
+      })
+    }, 2000);
   }
 
   // getAuthToken(){
