@@ -8,10 +8,11 @@ import { AuthenticationTokenDetails } from '../../../models/interface/Authentica
 import { inject } from '@angular/core';
 import { UserIdInterface } from '../../../models/interface/UserIdInterface';
 import { Toastr } from '../../../reusable/toastr/toastr';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterOutlet, RouterLink, RouterModule],
+  imports: [RouterOutlet, RouterLink, RouterModule, FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -27,9 +28,12 @@ export class Home implements OnInit {
     refreshTokenExpiration: ''
   }
 
+  userName= '';
+
   ngOnInit(): void {
     this.token = this.getAuthToken();
     this.getUserId(this.token);
+    this.getUserName();
   }
 
   openTransaction(){
@@ -67,5 +71,14 @@ export class Home implements OnInit {
           this.toastr.errorToast('Something went wrong. Please contact admin');
         }
       })
+    }
+
+    getUserName(){
+      const isUsernameExist = sessionStorage.getItem('userName');
+      if (isUsernameExist){
+        this.userName = isUsernameExist;
+      } else {
+        this.userName = 'Log In';
+      }  
     }
 }

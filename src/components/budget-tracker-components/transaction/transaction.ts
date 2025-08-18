@@ -7,6 +7,8 @@ import { AuthenticationTokenDetails } from '../../../models/interface/Authentica
 import { UserIdInterface } from '../../../models/interface/UserIdInterface';
 import { UserApiService } from '../../../services/user-api-service';
 import { Toastr } from '../../../reusable/toastr/toastr';
+import { TransactionInterface } from '../../../models/interface/budget-tracker-interface/TransactionInterface';
+import { ReturnResponse } from '../../../models/return-response';
 
 @Component({
   selector: 'app-transaction',
@@ -25,23 +27,60 @@ export class Transaction implements OnInit {
     refreshToken: '',
     authTokenExpiration: '',
     refreshTokenExpiration: ''
-  }
+  };
 
+  private userDetails: UserIdInterface = {
+    userId: '',
+    userName: '',
+    email: ''
+  };
+
+  protected transactions: TransactionInterface[] | null = null;
 
   ngOnInit(): void {
     // this.token = this.getAuthToken();
     // this.getUserId(this.token);
+    this.getUserDetails();
+    this.loadTransactions();
   }
-
 
   openTest(){
     this.modal.open(TestModal, { message: 'Open Modal'});
   }
 
+  getUserDetails(){
+    return this.userDetails = {
+      userId: (sessionStorage.getItem('userId') ?? ''),
+      userName: (sessionStorage.getItem('userName') ?? ''),
+      email: (sessionStorage.getItem('email') ?? '')
+    }
+  }
 
-  // loadTransactions(){
-  //   this.transactionService.retrieveTransactionGet$(userToken)
-  // }
+  prepareUserTransactions(res: ReturnResponse<TransactionInterface[] | null>){
+    if(res.statusCode === 200 && Array.isArray(res.data)){
+      this.transactions = res.data;
+    } else {
+      this.transactions = null;
+    }
+  }
+
+  loadTransactions(){
+    this.transactionService.retrieveTransactionGet$(this.userDetails).subscribe({
+      next: (res) => {
+        if(res.statusCode === 200){
+          console.log(res);
+          this.prepareUserTransactions(res)
+          console.log(this.transactions);
+        } else if (res.statusCode === 404){
+          console.log(res.message);
+        }
+      },
+      error: (err) => {
+        console.error('Error during retrieving user data', err);
+        this.toastr.errorToast('Something went wrong. Please contact admin');
+      }
+    })
+  }
 
   // getAuthToken(){
   //   // return JSON.parse(sessionStorage.getItem('authToken') || 'null');
@@ -79,6 +118,10 @@ export class Transaction implements OnInit {
   //       this.toastr.errorToast('Something went wrong. Please contact admin');
   //     }
   //   })
+  // }
+
+  // retrieveUserTransactionsGet$(){
+  //   this.transactionService.retrieveTransactionGet$()
   // }
 
 }

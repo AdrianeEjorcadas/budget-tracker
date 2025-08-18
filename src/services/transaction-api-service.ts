@@ -13,16 +13,16 @@ export class TransactionApiService {
   private http = inject(HttpClient);
   constructor() { }
 
-  retrieveTransactionGet$(userId: UserIdInterface):Observable<ReturnResponse<boolean>>{
-    return this.http.get<ReturnResponse<boolean>>(`${environment.transactionApuIrl}/${environment.transactionEndPoint}/get-transcations?userId=${encodeURIComponent(userId.userId)}`)
+  retrieveTransactionGet$(userId: UserIdInterface):Observable<ReturnResponse<null>>{
+    return this.http.get<ReturnResponse<null>>(`${environment.transactionApuIrl}/${environment.transactionEndPoint}/get-transactions?userId=${encodeURIComponent(userId.userId)}`)
     .pipe(
       catchError(error => {
         console.error("Retrieving data failed", + error);
         return of({
           statusCode: 500,
           message: "Server error",
-          data: false
-        } satisfies ReturnResponse<boolean> )
+          data: null
+        } satisfies ReturnResponse<null> )
       })
     );
   }

@@ -3,6 +3,8 @@ import { Login } from '../components/login/login';
 import { Register } from '../components/register/register';
 import { ForgotPassword } from '../components/forgot-password/forgot-password';
 import { ConfirmEmail } from '../components/confirm-email/confirm-email';
+import { Injectable } from '@angular/core';
+
 
 export const routes: Routes = [
     {
@@ -45,6 +47,11 @@ export const routes: Routes = [
                 path: 'about',
                 title: 'Budget Tracker - About',
                 loadComponent: () => import('../components/budget-tracker-components/about/about').then(m => m.About)
+            },
+            {
+                path: 'account',
+                title: 'account',
+                loadComponent: () => import('../components/budget-tracker-components/account/account').then(m => m.Account)
             },
             {
                 path: '',
