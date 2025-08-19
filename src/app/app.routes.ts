@@ -30,6 +30,7 @@ export const routes: Routes = [
     },
     {
         path: 'home',
+        // canActivate: [AuthGuard], 
         title: 'Budget Tracker - Home',
         loadComponent: () => import('../components/budget-tracker-components/home/home').then(m => m.Home),
         children: [
@@ -76,9 +77,19 @@ export const routes: Routes = [
         loadComponent: () => import('../components/connection-timeout/connection-timeout').then(m => m.ConnectionTimeout)
     },
     {
+        path: 'server-error',
+        title: 'Server Error',
+        loadComponent: () => import('../components/server-down-error/server-down-error').then(m => m.ServerDownError)
+    },
+    {
         path: '',
         redirectTo: 'budget-tracker',
         // redirectTo: 'home',
         pathMatch: 'full'
+    },
+    {
+        path: '**',
+        title: 'Page Not Found',
+        loadComponent: () => import('../components/page-not-found/page-not-found').then(m => m.PageNotFound)
     }
 ];

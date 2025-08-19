@@ -1,1 +1,33 @@
-<p>{{data!.message}}</p>
+<!-- <p>{{data!.message}}</p> -->
+ <!-- Modal backdrop -->
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" >
+  <!-- Modal container -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+    <!-- Close button -->
+    <button (click)="close()"
+            class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+      ✕
+    </button>
+
+    <!-- Modal header -->
+    <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
+      Modal Title
+    </h2>
+
+    <!-- Modal body -->
+    <p class="text-gray-600 dark:text-gray-300">
+      This is where your modal content goes. Add forms, text, or interactive components here.
+    </p>
+
+    <!-- Modal footer -->
+    <div class="mt-6 flex justify-end space-x-3">
+      <button (click)="close()"
+              class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600">
+        Cancel
+      </button>
+      <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>

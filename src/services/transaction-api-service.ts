@@ -4,6 +4,8 @@ import { ReturnResponse } from '../models/return-response';
 import { environment } from '../environments/environment';
 import { catchError, Observable, of } from 'rxjs';
 import { UserIdInterface } from '../models/interface/UserIdInterface';
+import { RedirectCommand } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +13,14 @@ import { UserIdInterface } from '../models/interface/UserIdInterface';
 export class TransactionApiService {
 
   private http = inject(HttpClient);
+  private router = inject(Router);
   constructor() { }
 
   retrieveTransactionGet$(userId: UserIdInterface):Observable<ReturnResponse<null>>{
     return this.http.get<ReturnResponse<null>>(`${environment.transactionApuIrl}/${environment.transactionEndPoint}/get-transactions?userId=${encodeURIComponent(userId.userId)}`)
     .pipe(
       catchError(error => {
+        this.router.navigate(['/server-error'])
         console.error("Retrieving data failed", + error);
         return of({
           statusCode: 500,

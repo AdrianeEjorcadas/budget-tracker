@@ -72,7 +72,7 @@ export class Transaction implements OnInit {
         next: (res) => {
           if(res.statusCode === 200){
             console.log(res);
-            this.prepareUserTransactions(res)
+            this.prepareUserTransactions(res);
             this.isLoading = false;
             console.log(this.transactions);
           } else if (res.statusCode === 404){
