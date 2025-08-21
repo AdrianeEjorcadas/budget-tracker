@@ -9,6 +9,7 @@ import { UserApiService } from '../../../services/user-api-service';
 import { Toastr } from '../../../reusable/toastr/toastr';
 import { TransactionInterface } from '../../../models/interface/budget-tracker-interface/TransactionInterface';
 import { ReturnResponse } from '../../../models/return-response';
+import { AddTransaction } from '../../modal-components/add-transaction/add-transaction';
 
 @Component({
   selector: 'app-transaction',
@@ -46,7 +47,7 @@ export class Transaction implements OnInit {
   }
 
   openTest(){
-    this.modal.open(TestModal, { message: 'Open Modal'});
+    this.modal.open(AddTransaction);
   }
 
   getUserDetails(){
