@@ -10,10 +10,11 @@ import { Toastr } from '../../../reusable/toastr/toastr';
 import { TransactionInterface } from '../../../models/interface/budget-tracker-interface/TransactionInterface';
 import { ReturnResponse } from '../../../models/return-response';
 import { AddTransaction } from '../../modal-components/add-transaction/add-transaction';
+import {MatDialogModule, MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-transaction',
-  imports: [ModalHost],
+  imports: [ModalHost, MatDialogModule],
   templateUrl: './transaction.html',
   styleUrl: './transaction.css'
 })
@@ -21,6 +22,7 @@ export class Transaction implements OnInit {
 
   private toastr = inject(Toastr);
   private modal = inject(ModalService);
+  private dialog = inject(MatDialog);
   private userService = inject(UserApiService);
   private transactionService = inject(TransactionApiService);
   private token : AuthenticationTokenDetails = {
@@ -47,7 +49,18 @@ export class Transaction implements OnInit {
   }
 
   openTest(){
-    this.modal.open(AddTransaction);
+    const dialogRef = this.dialog.open(AddTransaction, {
+      width: '400px',
+      disableClose: true,
+      data: { /* optional data */ }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Dialog result:', result);
+      }
+    });
+
   }
 
   getUserDetails(){

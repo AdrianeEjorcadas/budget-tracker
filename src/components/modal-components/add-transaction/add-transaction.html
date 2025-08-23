@@ -1,32 +1,68 @@
- <!-- Modal backdrop -->
-<div class="fixed inset-0 bg-gray-700/50 flex items-center justify-center z-50">
-    <!-- Modal container -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-lg p-6 relative">
-    <!-- Close button -->
-        <button (click)="close()"
-                class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
-        ✕
-        </button>
-        
-        <!-- Modal header -->
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
-        Add Transaction
-        </h2>
+<div class="bg-gray-800 rounded">    
+    <h2 class="pt-4 pl-4 uppercase tracking-widest font-bold text-light-bg text-">transaction details</h2>
+    <div class="p-5">
+        <form [formGroup]="addTransactionForm" (ngSubmit)="submit()" class="flex flex-col gap-4">
+        <!-- Category -->
+            <div class="flex flex-col">
+                <label for="category" class="text-sm font-bold uppercase text-light-bg">Category:</label>
+                <input 
+                id="category"
+                formControlName="category"
+                type="text"
+                placeholder="Enter Category"
+                class="focus:border-light-btn rounded border border-gray-300 px-2 py-1 text-white capitalize focus:ring-0 focus:outline-none"
+                />
+            </div>
 
-        <!-- Modal body -->
-        <p class="text-gray-600 dark:text-gray-300">
-        This is where your modal content goes. Add forms, text, or interactive components here.
-        </p>
+            <!-- Transaction type -->
+            <div class="flex flex-col">
+                <label for="transactionType" class="text-sm font-bold uppercase text-light-bg">Transaction:</label>
+                <select 
+                formControlName="transactionType" 
+                id="transactionType" 
+                class="text-light-bg border border-gray-300 rounded py-2 bg-gray-800 focus:border-light-btn focus:ring-0 focus:outline-none">
+                @for (item of transactionType; track item.value) {
+                    <option [ngValue]="item.value">{{item.label}}</option>
+                }
+                </select>
+            </div>
 
-        <!-- Modal footer -->
-        <div class="mt-6 flex justify-end space-x-3">
-        <button (click)="close()"
-                class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600">
-            Cancel
-        </button>
-        <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-            Confirm
-        </button>
-        </div>
+            <!-- Amount -->
+            <div class="flex flex-col">
+                <label for="amount" class="text-sm font-bold uppercase text-light-bg">Amount:</label>
+                <input 
+                id="amount"
+                formControlName="amount"
+                type="text"
+                placeholder="0.00"
+                class="focus:border-light-btn rounded border border-gray-300 px-2 py-1 text-white capitalize focus:ring-0 focus:outline-none"
+                />
+            </div>
+
+            <!-- Description -->
+            <div class="flex flex-col">
+                <label for="description" class="text-sm font-bold uppercase text-light-bg">Description:</label>
+                <textarea 
+                id="description"
+                formControlName="description"
+                class="border text-xs border-gray-300 rounded-lg p-3 text-white focus:border-light-btn focus:ring-0 focus:outline-none"
+                ></textarea>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex justify-end gap-2">
+                <button 
+                type="button" 
+                (click)="dialogRef.close()" 
+                class="px-4 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 dark:text-light-bg transition-all duration-300">
+                Cancel
+                </button>
+                <button 
+                type="submit" 
+                class="px-4 py-1 text-sm capitalize bg-green-600 text-white rounded hover:bg-green-800 transition-all duration-300">
+                Submit
+                </button>
+            </div>
+        </form>
     </div>
 </div>
