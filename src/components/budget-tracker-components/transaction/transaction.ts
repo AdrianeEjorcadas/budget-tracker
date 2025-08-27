@@ -38,6 +38,8 @@ export class Transaction implements OnInit {
     email: ''
   };
 
+  categories: string[] = [];
+
   protected isLoading : boolean = true;
   protected transactions: TransactionInterface[] | null = null;
 
@@ -52,7 +54,7 @@ export class Transaction implements OnInit {
     const dialogRef = this.dialog.open(AddTransaction, {
       width: '400px',
       disableClose: true,
-      data: { /* optional data */ }
+      data: this.categories 
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -74,6 +76,7 @@ export class Transaction implements OnInit {
   prepareUserTransactions(res: ReturnResponse<TransactionInterface[] | null>){
     if(res.statusCode === 200 && Array.isArray(res.data)){
       this.transactions = res.data;
+      this.categories = this.transactions.map(transaction => transaction.category);
     } else {
       this.transactions = null;
     }

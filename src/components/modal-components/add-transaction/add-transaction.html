@@ -5,13 +5,14 @@
         <!-- Category -->
             <div class="flex flex-col">
                 <label for="category" class="text-sm font-bold uppercase text-light-bg">Category:</label>
-                <input 
-                id="category"
-                formControlName="category"
-                type="text"
-                placeholder="Enter Category"
-                class="focus:border-light-btn rounded border border-gray-300 px-2 py-1 text-white capitalize focus:ring-0 focus:outline-none"
-                />
+                <select
+                    formControlName="category"
+                    id="category"
+                    class="text-light-bg border border-gray-300 rounded py-2 bg-gray-800 focus:border-light-btn focus:ring-0 focus:outline-none">
+                    @for (item of categories$(); track item.categoryId) {
+                        <option [ngValue]="item.categoryId">{{item.category}}</option>
+                    }
+                </select>
             </div>
 
             <!-- Transaction type -->
@@ -31,11 +32,12 @@
             <div class="flex flex-col">
                 <label for="amount" class="text-sm font-bold uppercase text-light-bg">Amount:</label>
                 <input 
-                id="amount"
-                formControlName="amount"
-                type="text"
-                placeholder="0.00"
-                class="focus:border-light-btn rounded border border-gray-300 px-2 py-1 text-white capitalize focus:ring-0 focus:outline-none"
+                    id="amount"
+                    formControlName="amount"
+                    type="text"
+                    (input)="onInput($event)"
+                    (blur)="onBlur()"
+                    class="focus:border-light-btn rounded border border-gray-300 px-2 py-1 text-white capitalize focus:ring-0 focus:outline-none"
                 />
             </div>
 

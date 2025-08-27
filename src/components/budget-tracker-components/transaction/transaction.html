@@ -23,6 +23,7 @@
                 <tr>
                     <th class="px-2 py-3 tracking-wider text-xs font-semibold text-gray-700 uppercase hidden sm:block ">No.</th>
                     <th class="px-6 py-3 tracking-wider text-xs font-semibold text-gray-700 uppercase ">Transaction</th>
+                    <th class="px-6 py-3 tracking-wider text-xs font-semibold text-gray-700 uppercase ">Description</th>
                     <th class="px-6 py-3 tracking-wider text-xs font-semibold text-gray-700 uppercase ">Type</th>
                     <th class="px-6 py-3 tracking-wider text-xs font-semibold text-gray-700 uppercase ">Amount</th>
                     <th class="px-6 py-3 "></th>
@@ -46,6 +47,7 @@
                             
                                 <td class="px-2 py-3 tracking-wider text-xs font-medium text-gray-900 hidden sm:block text-center">{{$index+1}}</td>
                                 <td class="px-6 py-3 tracking-wider text-xs font-medium text-gray-900 text-center">{{item.category}}</td>
+                                <td class="px-6 py-3 tracking-wider text-xs font-medium text-gray-900 text-center">{{item.description}}</td>
                                 <td class="px-6 py-3 tracking-wider text-xs font-medium text-gray-900 text-center">{{item.transactionType === 0 ? 'Income' : 'Expense'}}</td>
                                 <td class="px-6 py-3 tracking-wider text-xs font-medium text-gray-900 text-center">{{item.amount}}</td>
                                 <td class="px-6 py-3 text-center">
