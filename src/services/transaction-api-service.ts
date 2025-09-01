@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { AddTransactionInterface } from '../models/interface/AddTransactionInterface';
 import { Toastr } from '../reusable/toastr/toastr';
 import { CategoryInterface } from '../models/interface/budget-tracker-interface/CategoryInterface';
+import { EditTransactionInterface } from '../models/interface/budget-tracker-interface/EditTransactionInterface';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,21 @@ export class TransactionApiService {
 
   retrieveTransactionGet$(userId: UserIdInterface):Observable<ReturnResponse<null>>{
     return this.http.get<ReturnResponse<null>>(`${environment.transactionApuIrl}/${environment.transactionEndPoint}/get-transactions?userId=${encodeURIComponent(userId.userId)}`)
+    .pipe(
+      catchError(error => {
+        this.router.navigate(['/server-error'])
+        console.error("Retrieving data failed", + error);
+        return of({
+          statusCode: 500,
+          message: "Server error",
+          data: null
+        } satisfies ReturnResponse<null> )
+      })
+    );
+  }
+
+  retrieveTransactionByIdGet(transactiondId: string) : Observable<ReturnResponse<null>>{
+    return this.http.get<ReturnResponse<null>>(`${environment.transactionApuIrl}/${environment.transactionEndPoint}/get-transaction?transactionId=${encodeURIComponent(transactiondId)}`)
     .pipe(
       catchError(error => {
         this.router.navigate(['/server-error'])
@@ -65,6 +81,22 @@ export class TransactionApiService {
     );
   }
   
+
+  updateTransactionPut(editTransaction: EditTransactionInterface): Observable<ReturnResponse<null>>{
+    return this.http.put<ReturnResponse<null>>(`${environment.transactionApuIrl}/${environment.transactionEndPoint}/update-transaction`,editTransaction)
+    .pipe(
+      catchError(error => {
+        this.router.navigate(['/server-error']);
+        console.error("Data update failed", + error);
+        return of({
+          statusCode: 500,
+          message: "Server error",
+          data: null
+        } satisfies ReturnResponse<null> )
+      })
+    )
+  }
+
 
 
 }

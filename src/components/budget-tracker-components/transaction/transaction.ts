@@ -11,6 +11,7 @@ import { TransactionInterface } from '../../../models/interface/budget-tracker-i
 import { ReturnResponse } from '../../../models/return-response';
 import { AddTransaction } from '../../modal-components/add-transaction/add-transaction';
 import {MatDialogModule, MatDialog} from '@angular/material/dialog';
+import { EditTransaction } from '../../modal-components/edit-transaction/edit-transaction';
 
 @Component({
   selector: 'app-transaction',
@@ -59,10 +60,23 @@ export class Transaction implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Dialog result:', result);
+        console.log('AddTransaction Dialog result:', result);
       }
     });
+  }
 
+  editTransaction(transactionId: string){
+    const dialogRef = this.dialog.open(EditTransaction, {
+      width: '400px',
+      disableClose: false,
+      data: transactionId
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('EditTransaction Dialog result:', result);
+      }
+    })
   }
 
   getUserDetails(){

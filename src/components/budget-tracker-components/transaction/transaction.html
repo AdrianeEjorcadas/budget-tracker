@@ -51,12 +51,12 @@
                                 <td class="px-6 py-3 tracking-wider text-xs font-medium text-gray-900 text-center">{{item.transactionType === 0 ? 'Income' : 'Expense'}}</td>
                                 <td class="px-6 py-3 tracking-wider text-xs font-medium text-gray-900 text-center">{{item.amount}}</td>
                                 <td class="px-6 py-3 text-center">
-                                    <a href="#" title="Edit transaction">
-                                        <i class="fa-solid fa-pen-to-square text-green-500 hover:text-green-300 transition-all duration-300 "></i>
+                                    <a (click)="editTransaction(item.transactionId)" title="Edit transaction">
+                                        <i class="fa-solid fa-pen-to-square cursor-pointer text-green-500 hover:text-green-300 transition-all duration-300 "></i>
                                     </a>
                                 </td>
                                 <td class="px-6 py-3 text-center">
-                                    <a href="#" title="Delete transaction">
+                                    <a (click)="editTransaction(item.transactionId)" title="Delete transaction">
                                         <i class="fa-solid fa-trash text-red-500 hover:text-red-300 transition-all duration-300"></i>
                                     </a>
                                 </td>

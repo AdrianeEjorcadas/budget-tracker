@@ -61,9 +61,9 @@ export class AddTransaction implements OnInit{
   initializeForm(){
     this.addTransactionForm = this.formBuilder.group({
       userId: [sessionStorage.getItem('userId')],
-      transactionType: [0, [Validators.required, oneOrZeroValidator]],
-      amount: [0, [Validators.required, Validators.min(0.01)]],
-      category: [0, Validators.required],
+      transactionType: [Validators.required, oneOrZeroValidator],
+      amount: [0,[Validators.required, Validators.min(0.01)]],
+      category: [Validators.required],
       description: ['']
     });
   }
@@ -134,7 +134,7 @@ export class AddTransaction implements OnInit{
   }
 
 
-  ngAfterViewInit() {
+ngAfterViewInit() {
   console.log(this.addTransactionForm.get('category'));
 }
 

@@ -1,7 +1,7 @@
-<div class="bg-gray-800 rounded">    
+<div class="bg-gray-800 rounded">
     <h2 class="pt-4 pl-4 uppercase tracking-widest font-bold text-light-bg text-">transaction details</h2>
     <div class="p-5">
-        <form [formGroup]="addTransactionForm" (ngSubmit)="submit()" class="flex flex-col gap-4">
+        <form [formGroup]="editTransactionForm" (ngSubmit)="submit()" class="flex flex-col gap-4">
         <!-- Category -->
             <div class="flex flex-col">
                 <label for="category" class="text-sm font-bold uppercase text-light-bg">Category:</label>
@@ -10,7 +10,7 @@
                     id="category"
                     class="text-light-bg border border-gray-300 rounded py-2 bg-gray-800 focus:border-light-btn focus:ring-0 focus:outline-none">
                     @for (item of categories$(); track item.categoryId) {
-                        <option [ngValue]="item.categoryId">{{item.category}}</option>
+                        <option [value]="item.categoryId">{{item.category}}</option>
                     }
                 </select>
             </div>
@@ -23,7 +23,7 @@
                 id="transactionType" 
                 class="text-light-bg border border-gray-300 rounded py-2 bg-gray-800 focus:border-light-btn focus:ring-0 focus:outline-none">
                 @for (item of transactionType; track item.value) {
-                    <option [ngValue]="item.value">{{item.label}}</option>
+                    <option [value]="item.value">{{item.label}}</option>
                 }
                 </select>
             </div>
@@ -61,11 +61,12 @@
                 </button>
                 <button 
                 type="submit" 
-                [disabled]="!addTransactionForm.valid"
+                [disabled]="!editTransactionForm.valid"
                 class="px-4 py-1 text-sm capitalize bg-green-600 text-white rounded hover:bg-green-800 transition-all duration-300">
                 Submit
                 </button>
             </div>
         </form>
+
     </div>
 </div>
