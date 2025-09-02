@@ -115,7 +115,7 @@ export class Transaction implements OnInit {
           this.toastr.errorToast('Something went wrong. Please contact admin');
         }
       })
-    }, 2000);
+    }, 500);
   }
 
   // getAuthToken(){

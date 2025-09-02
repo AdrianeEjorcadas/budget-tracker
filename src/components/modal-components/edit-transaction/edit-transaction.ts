@@ -1,4 +1,4 @@
-import { Component, inject, Inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, Inject, Injector, OnInit, signal, runInInjectionContext } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TransactionApiService } from '../../../services/transaction-api-service';
 import { Toastr } from '../../../reusable/toastr/toastr';
@@ -7,6 +7,7 @@ import { oneOrZeroValidator } from '../../../reusable/validators/oneOrZeroValida
 import { TransactionType } from '../../../enums/TransactionType';
 import { CategoryInterface } from '../../../models/interface/budget-tracker-interface/CategoryInterface';
 import { CommonModule } from '@angular/common';
+import { single } from 'rxjs';
 
 @Component({
   selector: 'app-edit-transaction',
@@ -17,11 +18,13 @@ import { CommonModule } from '@angular/common';
 export class EditTransaction implements OnInit {
 
   private toastr = inject(Toastr);
+  private injector = inject(Injector);
   private readonly transactionService = inject(TransactionApiService);
 
   // data
   transactionId: string = '';
   categories$ = signal<CategoryInterface[]>([]);
+  categoryId = signal<number | null>(null);
 
   // forms
   editTransactionForm! : FormGroup;
@@ -43,6 +46,7 @@ export class EditTransaction implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
+    this.getCategories$();
     this.getTransaction();
   }
 
@@ -61,8 +65,8 @@ export class EditTransaction implements OnInit {
       next: (res) => {
         if(res.statusCode === 200){
           if (res.data){
-          this.categories$.set(res.data!);
-          // console.log(this.categories$());
+          this.categories$.set(res.data);
+          console.log(this.categories$());
           } else {
             this.toastr.errorToast('No categories found');
           }
@@ -78,11 +82,27 @@ export class EditTransaction implements OnInit {
   }
 
   initializeFormValue(transactionValue: any ){
+
+    this.getCategoryId(transactionValue.category);
+
     this.editTransactionForm.patchValue({
       transactionType: transactionValue.transactionType,
       amount: transactionValue.amount,
-      // category: transactionValue.category,
+      // category: categoryId,
       description: transactionValue.description
+    });
+  }
+
+  // get the category id from category signal
+  getCategoryId(category: string) {
+    // effect() can only run insde constructor or inside of runInInjectionContext since it is DI
+    runInInjectionContext(this.injector, () => {
+      effect(() => {
+        const match = this.categories$().find(cat => cat.category === category);
+        if (match) {
+          this.editTransactionForm.patchValue({ category: match.categoryId });
+        }
+      });
     });
   }
 
