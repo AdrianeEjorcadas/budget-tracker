@@ -97,6 +97,20 @@ export class TransactionApiService {
     )
   }
 
+  DeleteTransaction(transactionId: string):Observable<ReturnResponse<null>>{
+    return this.http.delete<ReturnResponse<null>>(`${environment.transactionApuIrl}/${environment.transactionEndPoint}/delete-transaction?transactionId=${encodeURIComponent(transactionId)}`)
+    .pipe(
+      catchError(error => {
+        this.router.navigate(['/server-error']);
+        console.error("Data update failed", + error);
+        return of({
+          statusCode: 500,
+          message: "Server error",
+          data: null
+        } satisfies ReturnResponse<null> )
+      })
+    )
+  }
 
 
 }

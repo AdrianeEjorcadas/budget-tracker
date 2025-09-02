@@ -93,7 +93,7 @@ export class EditTransaction implements OnInit {
     });
   }
 
-  // get the category id from category signal
+  // get the category id from category signal to populate the drop down
   getCategoryId(category: string) {
     // effect() can only run insde constructor or inside of runInInjectionContext since it is DI
     runInInjectionContext(this.injector, () => {

@@ -1,0 +1,24 @@
+<div class="bg-gray-800 rounded">
+    <div class="p-5 flex flex-col gap-2">
+        <h2 class="uppercase text-light-bg tracking-widest font-semibold text-xs">delete transaction</h2>
+        <section class="flex flex-col gap-2">
+            <p class="text-light-bg">Do you want to delete transaction {{transactionId}} ?</p>
+            <!-- Action button control -->
+            <div class="flex justify-end gap-2">
+                <button 
+                    type="button"
+                    (click)="dialogRef.close()"
+                    class="px-4 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 dark:text-light-bg transition-all duration-300">
+                    Cancel   
+                </button>
+                <button
+                    type="button"
+                    (click)="submit()"
+                class="px-4 py-1 text-sm capitalize bg-red-800 text-white rounded cursor-pointer hover:bg-red-400 transition-all duration-300"
+                >
+                Delete
+                </button>
+            </div>
+        </section>
+    </div>
+</div>

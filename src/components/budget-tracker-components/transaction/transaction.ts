@@ -12,6 +12,7 @@ import { ReturnResponse } from '../../../models/return-response';
 import { AddTransaction } from '../../modal-components/add-transaction/add-transaction';
 import {MatDialogModule, MatDialog} from '@angular/material/dialog';
 import { EditTransaction } from '../../modal-components/edit-transaction/edit-transaction';
+import { DeleteTransaction } from '../../modal-components/delete-transaction/delete-transaction';
 
 @Component({
   selector: 'app-transaction',
@@ -77,6 +78,14 @@ export class Transaction implements OnInit {
         console.log('EditTransaction Dialog result:', result);
       }
     })
+  }
+
+  deleteTransaction(transactionId: string){
+    const dialogRef = this.dialog.open(DeleteTransaction, {
+      width: '400px',
+      disableClose: false,
+      data: transactionId
+    });
   }
 
   getUserDetails(){
