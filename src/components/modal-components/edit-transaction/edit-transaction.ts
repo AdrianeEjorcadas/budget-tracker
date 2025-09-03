@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, Inject, Injector, OnInit, signal, runInInjectionContext } from '@angular/core';
+import { Component, computed, effect, inject, Inject, Injector, OnInit, signal, runInInjectionContext, input, output } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TransactionApiService } from '../../../services/transaction-api-service';
 import { Toastr } from '../../../reusable/toastr/toastr';
@@ -7,7 +7,8 @@ import { oneOrZeroValidator } from '../../../reusable/validators/oneOrZeroValida
 import { TransactionType } from '../../../enums/TransactionType';
 import { CategoryInterface } from '../../../models/interface/budget-tracker-interface/CategoryInterface';
 import { CommonModule } from '@angular/common';
-import { single } from 'rxjs';
+import { finalize, single } from 'rxjs';
+import { TransactionInterface } from '../../../models/interface/budget-tracker-interface/TransactionInterface';
 
 @Component({
   selector: 'app-edit-transaction',
@@ -22,7 +23,10 @@ export class EditTransaction implements OnInit {
   private readonly transactionService = inject(TransactionApiService);
 
   // data
-  transactionId: string = '';
+  _transactionId: string = '';
+  _transactions = signal<TransactionInterface[] >([]);
+  transactions = computed(() => this._transactions());
+  
   categories$ = signal<CategoryInterface[]>([]);
   categoryId = signal<number | null>(null);
 
@@ -39,9 +43,12 @@ export class EditTransaction implements OnInit {
 
   constructor(
     protected dialogRef: MatDialogRef<EditTransaction>,
-    @Inject(MAT_DIALOG_DATA) public data: string
+    @Inject(MAT_DIALOG_DATA) public data : { transactionId: string; transactions: TransactionInterface[]}
   ) {
-    this.transactionId = data;
+    this._transactions.set(data.transactions);
+    this._transactionId = data.transactionId;
+    console.log("_transactions",this._transactions());
+    console.log("_transactionId",this._transactionId);
   }
 
   ngOnInit(): void {
@@ -52,7 +59,7 @@ export class EditTransaction implements OnInit {
 
   initializeForm(){
     this.editTransactionForm = this.formBuilder.group({
-      transactionId : [this.transactionId,[Validators.required]],
+      transactionId : [this._transactionId,[Validators.required]],
       transactionType: [Validators.required, oneOrZeroValidator],
       amount: [Validators.required, Validators.min(0.01)],
       category: [Validators.required],
@@ -82,9 +89,7 @@ export class EditTransaction implements OnInit {
   }
 
   initializeFormValue(transactionValue: any ){
-
     this.getCategoryId(transactionValue.category);
-
     this.editTransactionForm.patchValue({
       transactionType: transactionValue.transactionType,
       amount: transactionValue.amount,
@@ -92,7 +97,7 @@ export class EditTransaction implements OnInit {
       description: transactionValue.description
     });
   }
-
+  
   // get the category id from category signal to populate the drop down
   getCategoryId(category: string) {
     // effect() can only run insde constructor or inside of runInInjectionContext since it is DI
@@ -107,10 +112,10 @@ export class EditTransaction implements OnInit {
   }
 
   getTransaction(){
-    this.transactionService.retrieveTransactionByIdGet(this.transactionId).subscribe({
+    this.transactionService.retrieveTransactionByIdGet(this._transactionId).subscribe({
       next: (res) => {
         if (res.statusCode === 200){
-          console.log(res.data);
+          console.log("get transaction()", res.data);
           this.initializeFormValue(res.data);
         } else{
           this.toastr.errorToast(res.message);
@@ -123,13 +128,40 @@ export class EditTransaction implements OnInit {
     })
   }
 
+  // this will update the data of the table from the transactions table
+  saveTableData() {
+    const formValue = this.editTransactionForm.value;
+    this._transactions.update(list =>
+      list.map(t =>
+        t.transactionId === this._transactionId
+          ? {
+              ...t,
+              transactionType: formValue.transactionType,
+              amount: formValue.amount,
+              category: formValue.category,
+              description: formValue.description
+            }
+          : t
+      )
+    );
+  }
+
+
   submit(){
     const formData = this.editTransactionForm.value;
-    this.transactionService.updateTransactionPut(formData).subscribe({
+    this.transactionService.updateTransactionPut(formData)
+    .pipe(finalize (() => {
+      this.saveTableData();
+      // Find the updated transaction in the local signal
+      const updatedItem = this._transactions()
+        .find(t => t.transactionId === this._transactionId);
+      this.dialogRef.close(updatedItem);
+      console.log("_transactions close", updatedItem);
+    }))
+    .subscribe({
       next: (res) => {
         if(res.statusCode === 200){
           this.toastr.successToast(res.message);
-          this.dialogRef.close();
         } else {
           this.toastr.errorToast(res.message);
         }

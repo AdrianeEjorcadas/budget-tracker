@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { ModalService } from '../../../services/modal-service';
 import { TestModal } from '../../../reusable/modal/test-modal/test-modal';
 import { ModalHost } from '../../../reusable/modal/modal-host/modal-host';
@@ -13,12 +13,14 @@ import { AddTransaction } from '../../modal-components/add-transaction/add-trans
 import {MatDialogModule, MatDialog} from '@angular/material/dialog';
 import { EditTransaction } from '../../modal-components/edit-transaction/edit-transaction';
 import { DeleteTransaction } from '../../modal-components/delete-transaction/delete-transaction';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-transaction',
-  imports: [ModalHost, MatDialogModule],
+  imports: [MatDialogModule],
   templateUrl: './transaction.html',
-  styleUrl: './transaction.css'
+  styleUrl: './transaction.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Transaction implements OnInit {
 
@@ -42,8 +44,9 @@ export class Transaction implements OnInit {
 
   categories: string[] = [];
 
-  protected isLoading : boolean = true;
+  protected isLoading = signal(true);
   protected transactions: TransactionInterface[] | null = null;
+  protected transactionsSignal$ = signal<TransactionInterface[]>([]);
 
   ngOnInit(): void {
     // this.token = this.getAuthToken();
@@ -66,19 +69,32 @@ export class Transaction implements OnInit {
     });
   }
 
-  editTransaction(transactionId: string){
-    const dialogRef = this.dialog.open(EditTransaction, {
-      width: '400px',
-      disableClose: false,
-      data: transactionId
-    });
+editTransaction(transactionId: string) {
+  const dialogRef = this.dialog.open(EditTransaction, {
+    width: '400px',
+    disableClose: false,
+    data: {
+      transactionId: transactionId,
+      transactions: this.transactionsSignal$() // snapshot
+    }
+  });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log('EditTransaction Dialog result:', result);
-      }
-    })
-  }
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+
+      result.transactionType = Number(result.transactionType);
+
+      this.transactionsSignal$.update(list =>
+        list.map(tx =>
+          tx.transactionId === result.transactionId
+            ? result // replace with updated transaction
+            : tx
+        )
+      );
+      console.log('EditTransaction Dialog result:', result);
+    }
+  });
+}
 
   deleteTransaction(transactionId: string){
     const dialogRef = this.dialog.open(DeleteTransaction, {
@@ -98,23 +114,27 @@ export class Transaction implements OnInit {
 
   prepareUserTransactions(res: ReturnResponse<TransactionInterface[] | null>){
     if(res.statusCode === 200 && Array.isArray(res.data)){
-      this.transactions = res.data;
-      this.categories = this.transactions.map(transaction => transaction.category);
+      // this.transactions = res.data;
+      // this.categories = this.transactions.map(transaction => transaction.category);
+      this.transactionsSignal$.set(res.data.filter(t => !t.isDeleted));
+      console.log("signal " , this.transactionsSignal$());
+      this.categories = this.transactionsSignal$().map(transaction => transaction.category);
     } else {
       this.transactions = null;
     }
   }
 
   loadTransactions(){
-    this.isLoading = true;
-    setTimeout(() => {
-      this.transactionService.retrieveTransactionGet$(this.userDetails).subscribe({
+    this.isLoading.set(true);
+      this.transactionService.retrieveTransactionGet$(this.userDetails)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
         next: (res) => {
           if(res.statusCode === 200){
             console.log(res);
             this.prepareUserTransactions(res);
-            this.isLoading = false;
-            console.log(this.transactions);
+            console.log(this.transactionsSignal$());
+            console.log(this.isLoading);
           } else if (res.statusCode === 404){
             console.log(res.message);
           }
@@ -123,9 +143,8 @@ export class Transaction implements OnInit {
           console.error('Error during retrieving user data', err);
           this.toastr.errorToast('Something went wrong. Please contact admin');
         }
-      })
-    }, 500);
-  }
+      });
+    }
 
   // getAuthToken(){
   //   // return JSON.parse(sessionStorage.getItem('authToken') || 'null');

@@ -31,7 +31,7 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-                @if (isLoading) {
+                @if (isLoading()) {
                     <tr>
                         <td colspan="6" class="px-6 py-4 text-start text-sm text-gray-500">
                             <div class="flex justify-center items-center space-x-2">
@@ -41,7 +41,7 @@
                         </td>
                     </tr>  
                 }
-                @else if (transactions?.length !== 0) {
+                <!-- @else if (transactions?.length !== 0) {
                     @for (item of transactions; track $index) {
                         <tr class="hover:bg-amber-100">
                             
@@ -61,6 +61,26 @@
                                     </a>
                                 </td>
                         </tr>
+                    } -->
+                @else if (transactionsSignal$().length !== 0) {
+                    @for (item of transactionsSignal$(); track $index) {
+                        <tr class="hover:bg-amber-100">
+                            <td class="px-2 py-3 tracking-wider text-xs font-medium text-gray-900 hidden sm:block text-center">{{$index+1}}</td>
+                            <td class="px-6 py-3 tracking-wider text-xs font-medium text-gray-900 text-center">{{item.category}}</td>
+                            <td class="px-6 py-3 tracking-wider text-xs font-medium text-gray-900 text-center">{{item.description}}</td>
+                            <td class="px-6 py-3 tracking-wider text-xs font-medium text-gray-900 text-center">{{item.transactionType === 0 ? 'Income' : 'Expense'}}</td>
+                            <td class="px-6 py-3 tracking-wider text-xs font-medium text-gray-900 text-center">{{item.amount}}</td>
+                            <td class="px-6 py-3 text-center">
+                                <a (click)="editTransaction(item.transactionId)" title="Edit transaction">
+                                    <i class="fa-solid fa-pen-to-square cursor-pointer text-green-500 hover:text-green-300 transition-all duration-300 "></i>
+                                </a>
+                            </td>
+                            <td class="px-6 py-3 text-center">
+                                <a (click)="deleteTransaction(item.transactionId)" title="Delete transaction">
+                                    <i class="fa-solid fa-trash cursor-pointer text-red-500 hover:text-red-300 transition-all duration-300"></i>
+                                </a>
+                            </td>
+                        </tr>
                     }
                 } @else {
                     <tr>
@@ -75,6 +95,6 @@
 </div>
 
 <!-- modal -->
-<div>
+<!-- <div>
     <app-modal-host></app-modal-host>
-</div>
+</div> -->

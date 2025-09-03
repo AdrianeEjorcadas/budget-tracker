@@ -5,5 +5,6 @@ export interface TransactionInterface {
     transactionType: number,
     amount: string,
     category: string,
-    description: string
+    description: string,
+    isDeleted: boolean
 }
