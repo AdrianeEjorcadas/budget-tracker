@@ -14,6 +14,7 @@ import {MatDialogModule, MatDialog} from '@angular/material/dialog';
 import { EditTransaction } from '../../modal-components/edit-transaction/edit-transaction';
 import { DeleteTransaction } from '../../modal-components/delete-transaction/delete-transaction';
 import { finalize } from 'rxjs';
+import { CategoryInterface } from '../../../models/interface/budget-tracker-interface/CategoryInterface';
 
 @Component({
   selector: 'app-transaction',
@@ -42,11 +43,13 @@ export class Transaction implements OnInit {
     email: ''
   };
 
-  categories: string[] = [];
-
+  // data
+  categories: string[] = []; // for testing
+  // protected categories$ = signal<CategoryInterface[]>([]);
   protected isLoading = signal(true);
   protected transactions: TransactionInterface[] | null = null;
   protected transactionsSignal$ = signal<TransactionInterface[]>([]);
+  // protected categories$ = signal<CategoryInterface[]>([]);
 
   ngOnInit(): void {
     // this.token = this.getAuthToken();
@@ -118,7 +121,8 @@ editTransaction(transactionId: string) {
       // this.categories = this.transactions.map(transaction => transaction.category);
       this.transactionsSignal$.set(res.data.filter(t => !t.isDeleted));
       console.log("signal " , this.transactionsSignal$());
-      this.categories = this.transactionsSignal$().map(transaction => transaction.category);
+      // this.categories = this.transactionsSignal$().map(transaction => transaction.category);
+      // console.log("categories:", this.categories);
     } else {
       this.transactions = null;
     }
@@ -145,6 +149,8 @@ editTransaction(transactionId: string) {
         }
       });
     }
+    
+    
 
   // getAuthToken(){
   //   // return JSON.parse(sessionStorage.getItem('authToken') || 'null');

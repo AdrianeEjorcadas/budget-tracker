@@ -19,6 +19,7 @@
             <div class="flex flex-col">
                 <label for="transactionType" class="text-sm font-bold uppercase text-light-bg">Transaction:</label>
                 <select 
+                (change)="onTransactionTypeChange($event)"
                 formControlName="transactionType" 
                 id="transactionType" 
                 class="text-light-bg border border-gray-300 rounded py-2 bg-gray-800 focus:border-light-btn focus:ring-0 focus:outline-none">

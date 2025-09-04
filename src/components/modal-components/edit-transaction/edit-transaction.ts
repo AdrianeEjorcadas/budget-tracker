@@ -60,7 +60,7 @@ export class EditTransaction implements OnInit {
   initializeForm(){
     this.editTransactionForm = this.formBuilder.group({
       transactionId : [this._transactionId,[Validators.required]],
-      transactionType: [Validators.required, oneOrZeroValidator],
+      transactionType: [oneOrZeroValidator],
       amount: [Validators.required, Validators.min(0.01)],
       category: [Validators.required],
       description:['']
@@ -131,6 +131,8 @@ export class EditTransaction implements OnInit {
   // this will update the data of the table from the transactions table
   saveTableData() {
     const formValue = this.editTransactionForm.value;
+    console.log("formValue",formValue);
+    console.log("saveTableData",this.categories$());
     this._transactions.update(list =>
       list.map(t =>
         t.transactionId === this._transactionId
@@ -138,14 +140,13 @@ export class EditTransaction implements OnInit {
               ...t,
               transactionType: formValue.transactionType,
               amount: formValue.amount,
-              category: formValue.category,
+              category: this.categories$().find(c => c.categoryId == formValue.category)?.category || '',
               description: formValue.description
             }
           : t
       )
     );
   }
-
 
   submit(){
     const formData = this.editTransactionForm.value;
@@ -197,6 +198,11 @@ export class EditTransaction implements OnInit {
     if (inputEl) inputEl.value = formatted;
   }
 
+  onTransactionTypeChange(event: Event){
+    const selected = event.target as HTMLSelectElement;
+    const selectedValue = selected.value;
+    console.log(selectedValue);
+  }
 
 
 
