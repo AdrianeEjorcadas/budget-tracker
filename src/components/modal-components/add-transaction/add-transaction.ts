@@ -14,6 +14,10 @@ import {MatInputModule} from '@angular/material/input';
 import { DialogRef } from '@angular/cdk/dialog';
 import { Toastr } from '../../../reusable/toastr/toastr';
 import { CategoryInterface } from '../../../models/interface/budget-tracker-interface/CategoryInterface';
+import { finalize, tap } from 'rxjs';
+import { TransactionInterface } from '../../../models/interface/budget-tracker-interface/TransactionInterface';
+import { ReturnResponse } from '../../../models/return-response';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 
 @Component({
@@ -30,6 +34,7 @@ export class AddTransaction implements OnInit{
   private toastr = inject(Toastr);
   
 
+
   transactionType = Object.values(TransactionType)
     .filter(key => isNaN(Number(key))) // keep only string keys
     .map(key => ({
@@ -42,12 +47,19 @@ export class AddTransaction implements OnInit{
   private formBuilder = inject(FormBuilder);
   
   //modal
-  dialogRef = inject(DialogRef<AddTransaction>);
+  // dialogRef = inject(DialogRef<AddTransaction>);
 
   //data
   formattedAmount: string = '';
   categories$ = signal<CategoryInterface[]>([]);
+  private apiResult : ReturnResponse<any> | null = null;
   
+  constructor(
+    protected dialogRef: MatDialogRef<AddTransaction>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ){
+
+  }
 
   close(){
     this.modalService.close();
@@ -92,11 +104,21 @@ export class AddTransaction implements OnInit{
 
   submit(){
     const formData: AddTransactionInterface = this.addTransactionForm.value;
-    this.transactionService.addTransactionPost(formData).subscribe({
+    console.log("formdata: ",formData);
+    this.transactionService.addTransactionPost(formData)
+    .pipe(finalize(() => {
+      console.log("Finalize: ", this.apiResult);
+      if (this.apiResult){
+        this.dialogRef.close(this.apiResult);
+      }
+    }))
+    .subscribe({
       next: (res) => {
+        console.log(res);
         if(res.statusCode === 201){
           this.toastr.successToast('Successfully added');
-          this.dialogRef.close();
+          console.log('Closing dialog with:', res);
+          this.apiResult = res;
         } else {
           this.toastr.errorToast(res.message || 'Registration Failed')
         }
@@ -106,6 +128,19 @@ export class AddTransaction implements OnInit{
         this.toastr.errorToast('Something went wrong. Please try again.');
       }
     })
+  }
+
+  saveTableData(response: any): TransactionInterface {
+    const transactions: TransactionInterface = response.data.map((res: any) => ({
+      userId: res.userId,
+      transactionId: res.transactionId,
+      transactionType: res.transactionType,
+      amount: res.amount,
+      category: res.category,
+      description: res.description,
+      isDeleted: res.isDeleted
+    }));
+    return transactions;
   }
 
   

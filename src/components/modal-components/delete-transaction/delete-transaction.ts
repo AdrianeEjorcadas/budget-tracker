@@ -2,6 +2,7 @@ import { Component, Inject, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TransactionApiService } from '../../../services/transaction-api-service';
 import { Toastr } from '../../../reusable/toastr/toastr';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-delete-transaction',
@@ -27,7 +28,12 @@ export class DeleteTransaction {
 
   submit(){
     console.log(this.transactionId);
-    this.transactionService.DeleteTransaction(this.transactionId).subscribe({
+    this.transactionService.DeleteTransaction(this.transactionId)
+    .pipe(finalize (()=>{
+      this.dialogRef.close(true);
+      })
+    )
+    .subscribe({
       next: (res) =>{
         if (res.statusCode === 200){
           this.toastr.successToast('Transaction Successfully Deleted!');
@@ -40,7 +46,6 @@ export class DeleteTransaction {
       }
     });
     
-    this.dialogRef.close();
   }
 
 }

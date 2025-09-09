@@ -58,52 +58,68 @@ export class Transaction implements OnInit {
     this.loadTransactions();
   }
 
-  openTest(){
+  addTransaction(){
     const dialogRef = this.dialog.open(AddTransaction, {
       width: '400px',
       disableClose: true,
       data: this.categories 
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log('AddTransaction Dialog result:', result);
-      }
+    dialogRef.afterClosed().subscribe( result => {
+          console.log("after close:", result);
+        if(result){
+          console.log("Old value transactionsSignal$:", this.transactionsSignal$());
+          console.log("Add Transaction result:", result);
+          this.transactionsSignal$.update(list => [...list, result.data]);
+          console.log("New value transactionsSignal$:", this.transactionsSignal$());
+        }
     });
   }
 
-editTransaction(transactionId: string) {
-  const dialogRef = this.dialog.open(EditTransaction, {
-    width: '400px',
-    disableClose: false,
-    data: {
-      transactionId: transactionId,
-      transactions: this.transactionsSignal$() // snapshot
-    }
-  });
+  editTransaction(transactionId: string) {
+    const dialogRef = this.dialog.open(EditTransaction, {
+      width: '400px',
+      disableClose: false,
+      data: {
+        transactionId: transactionId,
+        transactions: this.transactionsSignal$() // snapshot
+      }
+    });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
 
-      result.transactionType = Number(result.transactionType);
+        result.transactionType = Number(result.transactionType);
 
-      this.transactionsSignal$.update(list =>
-        list.map(tx =>
-          tx.transactionId === result.transactionId
-            ? result // replace with updated transaction
-            : tx
-        )
-      );
-      console.log('EditTransaction Dialog result:', result);
-    }
-  });
-}
+        this.transactionsSignal$.update(list =>
+          list.map(tx =>
+            tx.transactionId === result.transactionId
+              ? result // replace with updated transaction
+              : tx
+          )
+        );
+        console.log('EditTransaction Dialog result:', result);
+      }
+    });
+  }
 
   deleteTransaction(transactionId: string){
     const dialogRef = this.dialog.open(DeleteTransaction, {
       width: '400px',
       disableClose: false,
       data: transactionId
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.transactionsSignal$.update(list => 
+          list.map(tx => 
+            tx.transactionId === transactionId
+              ? { ...tx, isDeleted: true }
+              : tx
+          ).filter(tx => !tx.isDeleted)
+        )
+      }
     });
   }
 
